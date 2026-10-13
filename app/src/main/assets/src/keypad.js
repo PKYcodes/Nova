@@ -1,5 +1,5 @@
 // ---------- Keypad wiring ----------
-import { keypad, clearKey, resultLine } from "./dom.js";
+import { keypad, clearKey, resultLine, speakBadge } from "./dom.js";
 import { state } from "./state.js";
 import { render, updateMemoryBadge } from "./render.js";
 import { ensureAudio, vibrateForKey, soundOn } from "./audio.js";
@@ -79,6 +79,21 @@ window.addEventListener("keydown", (e) => {
   else if (e.key === "Escape") { state.clearAll(); render(); }
   else if (e.key === "%") { state.percent(); render(); }
 });
+
+
+// 1-Tap Speaker button on LCD top bar: Speaks instantly!
+if (speakBadge) {
+  speakBadge.addEventListener("click", (e) => {
+    e.stopPropagation();
+    ensureAudio();
+    if (state.current !== "Error") {
+      const words = numberToWordsFull(state.current, voiceLang);
+      showToast(words, 2200);
+      speakNumber(words, true);
+      vibrate(10);
+    }
+  });
+}
 
 // ---------- Result line: long-press to copy, double-tap to hear it spoken ----------
 let copyHoldTimer = null;

@@ -7,10 +7,19 @@
     <!-- Vibration for per-key haptic feedback -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <!-- Allow package visibility for direct WhatsApp sharing and Hindi/English TTS on Android 11+ -->
+    <!-- Allow package visibility for direct WhatsApp, Telegram, X, SMS & TTS on Android 11+ -->
     <queries>
         <package android:name="com.whatsapp" />
         <package android:name="com.whatsapp.w4b" />
+        <package android:name="org.telegram.messenger" />
+        <package android:name="org.thunderdog.challegram" />
+        <package android:name="com.twitter.android" />
+        <package android:name="com.facebook.katana" />
+        <package android:name="com.facebook.lite" />
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="sms" />
+        </intent>
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
         </intent>
@@ -43,7 +52,6 @@
             </intent-filter>
         </activity>
 
-        <!-- FileProvider for sharing calculation cards (PNG) and history exports (TXT) -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

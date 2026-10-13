@@ -4,6 +4,7 @@ import { state } from "./state.js";
 import { openConverter } from "./converter.js";
 import { openAgeCalc } from "./ageCalculator.js";
 import { shareAsImage, shareViaWhatsApp } from "./shareImage.js";
+import { openShareModal } from "./shareModal.js";
 
 export function openMenu() { menuDropdown.hidden = false; }
 export function closeMenu() { menuDropdown.hidden = true; }
@@ -20,7 +21,7 @@ converterMenuItem.addEventListener("click", () => { closeMenu(); openConverter()
 ageMenuItem.addEventListener("click", () => { closeMenu(); openAgeCalc(); });
 shareResultMenuItem.addEventListener("click", () => {
   closeMenu();
-  if (state.lastCalc) shareAsImage(state.lastCalc);
+  if (state.lastCalc) openShareModal(state.lastCalc);
 });
 shareWhatsappMenuItem.addEventListener("click", () => {
   closeMenu();

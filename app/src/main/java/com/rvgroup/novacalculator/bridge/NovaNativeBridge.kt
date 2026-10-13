@@ -37,8 +37,7 @@ class NovaNativeBridge(
             try {
                 val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
                 cm?.setPrimaryClip(ClipData.newPlainText("Nova Calculator", text))
-            } catch (_: Exception) {
-            }
+            } catch (_: Exception) {}
         }
     }
 
@@ -63,7 +62,14 @@ class NovaNativeBridge(
     @JavascriptInterface
     fun shareWhatsApp(dataUrl: String, caption: String) {
         mainHandler.post {
-            ShareHelper.shareToWhatsApp(context, dataUrl, caption)
+            ShareHelper.shareToPlatform(context, "whatsapp", dataUrl, caption)
+        }
+    }
+
+    @JavascriptInterface
+    fun shareToPlatform(platform: String, dataUrl: String, caption: String) {
+        mainHandler.post {
+            ShareHelper.shareToPlatform(context, platform, dataUrl, caption)
         }
     }
 
@@ -76,4 +82,7 @@ class NovaNativeBridge(
 
     @JavascriptInterface
     fun getBrandSignature(): String = "RV Group LTD | ♥️ BY PANKAJ"
+
+    @JavascriptInterface
+    fun getAppVersion(): String = "1.0.0"
 }

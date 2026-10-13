@@ -1,38 +1,46 @@
-// ---------- Paste a number into the calculator from the clipboard ----------
+// ---------- Paste a number into the calculator from clipboard ----------
 import { pasteMenuItem, pasteBadge } from "./dom.js";
 import { state } from "./state.js";
 import { render } from "./render.js";
 import { showToast } from "./toast.js";
 import { closeMenu } from "./menu.js";
+import { voiceLang, speakNumber } from "./speech.js";
+import { vibrate } from "./audio.js";
 
 async function pasteFromClipboard() {
+  let rawText = "";
+
+  // 1. Check native Android bridge first (no permission popup)
   if (window.AndroidBridge && typeof window.AndroidBridge.readClipboard === "function") {
     try {
-      const nativeText = window.AndroidBridge.readClipboard() || "";
-      if (state.pasteNumber(nativeText)) {
-        render();
-        if (window.AndroidBridge.vibrate) window.AndroidBridge.vibrate("8");
-      } else {
-        showToast("Clipboard mein koi valid number nahi mila");
-      }
-      return;
+      rawText = window.AndroidBridge.readClipboard() || "";
     } catch (e) {}
   }
-  if (!navigator.clipboard || !navigator.clipboard.readText) {
-    showToast("Is browser mein clipboard access allowed nahi hai");
+
+  // 2. Fallback to web navigator.clipboard
+  if (!rawText && navigator.clipboard && navigator.clipboard.readText) {
+    try {
+      rawText = await navigator.clipboard.readText();
+    } catch (e) {}
+  }
+
+  // Try pasting the number
+  if (rawText && state.pasteNumber(rawText)) {
+    render();
+    vibrate(8);
+    showToast("Number paste ho gaya");
     return;
   }
-  try {
-    const text = await navigator.clipboard.readText();
-    if (state.pasteNumber(text)) {
-      render();
-      if (navigator.vibrate) { try { navigator.vibrate(8); } catch (e) {} }
-    } else {
-      showToast("Clipboard mein koi valid number nahi mila");
-    }
-  } catch (e) {
-    showToast("Paste karne ki permission nahi mili");
-  }
+
+  // Clipboard has no number: Toast + Aloud Speech + Vibration
+  const toastMsg = "Clipboard mein koi number nahi hai";
+  showToast(toastMsg, 2400);
+  vibrate([15, 40, 15]);
+
+  const spokenMsg = voiceLang === "hi"
+    ? "क्लिपबोर्ड में कोई नंबर नहीं है"
+    : "No number found in clipboard";
+  speakNumber(spokenMsg, true);
 }
 
 if (pasteMenuItem) {
@@ -42,8 +50,6 @@ if (pasteMenuItem) {
   });
 }
 
-// on-screen shortcut right on the display, next to the entry-count badge —
-// faster than digging into the ⋮ menu every time
 if (pasteBadge) {
   pasteBadge.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -51,9 +57,6 @@ if (pasteBadge) {
   });
 }
 
-// Ctrl+V (or a native "Paste" tap from text selection on mobile) also feeds
-// the calculator directly — but only when focus isn't inside a real text
-// input, so the unit converter's own fields keep normal paste behavior.
 window.addEventListener("paste", (e) => {
   const tag = document.activeElement && document.activeElement.tagName;
   if (tag === "INPUT" || tag === "TEXTAREA") return;
@@ -61,5 +64,6 @@ window.addEventListener("paste", (e) => {
   if (text && state.pasteNumber(text)) {
     e.preventDefault();
     render();
+    showToast("Pasted");
   }
 });

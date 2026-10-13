@@ -303,3 +303,20 @@
 }
 .key-sci:active, .key-sci.pressed { box-shadow: 0 0 14px rgba(var(--violet-rgb),0.4); }
 
+
+.speak-badge {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  border-radius: 5px;
+  background: rgba(var(--violet-rgb),0.14);
+  border: 1px solid rgba(var(--violet-rgb),0.4);
+  color: var(--violet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 100ms var(--ease-fast), background 120ms;
+}
+.speak-badge:active { transform: scale(0.88); background: rgba(var(--violet-rgb),0.28); }

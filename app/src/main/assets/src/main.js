@@ -15,6 +15,7 @@ import "./audio.js";
 import "./speech.js";
 import "./settings.js";
 import "./shareImage.js";
+import "./shareModal.js";
 import "./converter.js";
 import "./ageCalculator.js";
 import "./install.js";
@@ -62,7 +63,7 @@ window.__novaHandleBack = () => {
     menu.hidden = true;
     return true;
   }
-  for (const id of ["drawer", "convDrawer", "ageDrawer"]) {
+  for (const id of ["drawer", "convDrawer", "ageDrawer", "shareDrawer"]) {
     const el = document.getElementById(id);
     if (el && el.classList.contains("open")) {
       el.classList.remove("open");

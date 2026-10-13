@@ -245,3 +245,8 @@ export async function shareViaWhatsApp(calc) {
 
   window.open("https://wa.me/?text=" + encodeURIComponent(shareText), "_blank", "noopener");
 }
+
+export function generateShareCardDataUrl(calc) {
+  const canvas = generateShareCard(calc);
+  return canvas.toDataURL("image/png");
+}

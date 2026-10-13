@@ -1,4 +1,4 @@
-const CACHE_NAME = "nova-calc-v25";
+const CACHE_NAME = "nova-calc-v26";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -34,6 +34,7 @@ const APP_SHELL = [
   "./src/checkOverlay.js",
   "./src/history.js",
   "./src/shareImage.js",
+  "./src/shareModal.js",
   "./src/menu.js",
   "./src/install.js",
   "./src/keypad.js",

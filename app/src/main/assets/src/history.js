@@ -13,6 +13,7 @@ import { numberFormat } from "./settings.js";
 import { sfxClear } from "./audio.js";
 import { showToast } from "./toast.js";
 import { shareAsImage, shareViaWhatsApp } from "./shareImage.js";
+import { openShareModal } from "./shareModal.js";
 import { OP_META } from "./checkOverlay.js";
 
 function fmt(numStr) { return formatNumber(numStr, numberFormat); }
@@ -225,7 +226,7 @@ export function renderHistory() {
 
     li.querySelector(".tape-share").addEventListener("click", (e) => {
       e.stopPropagation();
-      shareAsImage({ expr: entry.expr, result: entry.result, note: entry.note, ts: entry.ts });
+      openShareModal({ expr: entry.expr, result: entry.result, note: entry.note, ts: entry.ts });
     });
 
     li.querySelector(".tape-whatsapp").addEventListener("click", (e) => {

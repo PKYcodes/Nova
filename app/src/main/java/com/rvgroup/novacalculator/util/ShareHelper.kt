@@ -50,44 +50,87 @@ object ShareHelper {
         context.startActivity(chooser)
     }
 
-    fun shareToWhatsApp(context: Context, dataUrl: String, caption: String) {
-        val uri = savePngDataUrl(context, dataUrl)
-        if (uri == null) {
-            Toast.makeText(context, "Image banane mein dikkat hui", Toast.LENGTH_SHORT).show()
-            return
-        }
-
+    fun shareToPlatform(context: Context, platform: String, dataUrl: String, caption: String) {
+        val uri = if (dataUrl.isNotBlank()) savePngDataUrl(context, dataUrl) else null
         val pm = context.packageManager
-        val targetPkg = listOf("com.whatsapp", "com.whatsapp.w4b").firstOrNull { pkg ->
-            try {
-                pm.getPackageInfo(pkg, 0)
-                true
-            } catch (_: Exception) {
-                false
+
+        when (platform.lowercase()) {
+            "whatsapp" -> {
+                val targets = listOf("com.whatsapp", "com.whatsapp.w4b")
+                val pkg = targets.firstOrNull { isPackageInstalled(pm, it) }
+                launchOrFallback(context, pkg, uri, caption, "Share via WhatsApp")
+            }
+            "telegram" -> {
+                val targets = listOf("org.telegram.messenger", "org.thunderdog.challegram")
+                val pkg = targets.firstOrNull { isPackageInstalled(pm, it) }
+                launchOrFallback(context, pkg, uri, caption, "Share via Telegram")
+            }
+            "twitter", "x" -> {
+                val targets = listOf("com.twitter.android")
+                val pkg = targets.firstOrNull { isPackageInstalled(pm, it) }
+                launchOrFallback(context, pkg, uri, caption, "Share via X")
+            }
+            "facebook" -> {
+                val targets = listOf("com.facebook.katana", "com.facebook.lite")
+                val pkg = targets.firstOrNull { isPackageInstalled(pm, it) }
+                launchOrFallback(context, pkg, uri, caption, "Share via Facebook")
+            }
+            "sms" -> {
+                try {
+                    val smsIntent = Intent(Intent.ACTION_VIEW).apply {
+                        data = Uri.parse("sms:")
+                        putExtra("sms_body", caption)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    context.startActivity(smsIntent)
+                } catch (_: Exception) {
+                    shareCalculationImage(context, dataUrl, "Nova Calculator", caption)
+                }
+            }
+            else -> {
+                shareCalculationImage(context, dataUrl, "Nova Calculator", caption)
             }
         }
+    }
 
+    private fun isPackageInstalled(pm: android.content.pm.PackageManager, pkg: String): Boolean {
+        return try {
+            pm.getPackageInfo(pkg, 0)
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    private fun launchOrFallback(context: Context, targetPkg: String?, uri: Uri?, caption: String, chooserTitle: String) {
         val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "image/png"
-            putExtra(Intent.EXTRA_STREAM, uri)
+            if (uri != null) {
+                type = "image/png"
+                putExtra(Intent.EXTRA_STREAM, uri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            } else {
+                type = "text/plain"
+            }
             putExtra(Intent.EXTRA_TEXT, caption)
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             if (targetPkg != null) {
                 setPackage(targetPkg)
             }
         }
-
         try {
             if (targetPkg != null) {
                 context.startActivity(intent)
             } else {
-                val chooser = Intent.createChooser(intent, "Share via WhatsApp").apply {
+                val chooser = Intent.createChooser(intent, chooserTitle).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
                 context.startActivity(chooser)
             }
         } catch (_: Exception) {
-            shareCalculationImage(context, dataUrl, "Nova Calculator", caption)
+            val chooser = Intent.createChooser(intent, chooserTitle).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(chooser)
         }
     }
 

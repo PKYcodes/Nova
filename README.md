@@ -62,4 +62,3 @@ Nova-Calculator-Android-KTS/
 - **Opening Animation (2.3 Seconds)**: App open hote hi **RV Group LTD — Powering Possibilities** logo card, neon progress bar, **`— powered by RV GROUP —`** lockup, aur **`RV Group LTD | ♥️ BY PANKAJ`** ke saath smooth 2.3-second splash animation dikhta hai (tap karke turant skip bhi kar sakte hain).
 - **App Footer & Topbar**: Har jagah **`— powered by RV GROUP —`** logo lockup aur **`RV Group LTD | ♥️ BY PANKAJ`** signature laga hua hai.
 - **Branded Share Card**: Calculation ko image ya WhatsApp par share karne par card ke niche **`— powered by RV GROUP —`** logo aur **`RV Group LTD | ♥️ BY PANKAJ`** print hota hai.
-# Nova

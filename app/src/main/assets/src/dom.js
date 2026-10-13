@@ -17,6 +17,7 @@ export const memBadge = document.getElementById("memBadge");
 export const entryBadge = document.getElementById("entryBadge");
 export const entryCountEl = document.getElementById("entryCount");
 export const pasteBadge = document.getElementById("pasteBadge");
+export const speakBadge = document.getElementById("speakBadge");
 export const sciWrap = document.getElementById("sciWrap");
 export const sciMenuItem = document.getElementById("sciMenuItem");
 export const sciMenuLabel = document.getElementById("sciMenuLabel");

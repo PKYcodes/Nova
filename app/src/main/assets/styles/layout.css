@@ -125,3 +125,40 @@
     0 0 80px -10px rgba(var(--green-rgb),0.45);
 }
 
+
+.menu-version-card {
+  margin-top: 10px;
+  padding: 10px 10px 4px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.menu-version-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.menu-version-name {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+.menu-version-pill {
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  background: rgba(var(--cyan-rgb),0.16);
+  border: 1px solid rgba(var(--cyan-rgb),0.4);
+  color: var(--cyan);
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+.menu-version-credit {
+  font-family: var(--font-ui);
+  font-size: 10px;
+  color: var(--text-dim);
+  font-weight: 500;
+}
