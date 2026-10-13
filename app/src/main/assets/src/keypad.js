@@ -2,7 +2,7 @@
 import { keypad, clearKey, resultLine, speakBadge } from "./dom.js";
 import { state } from "./state.js";
 import { render, updateMemoryBadge } from "./render.js";
-import { ensureAudio, vibrateForKey, soundOn } from "./audio.js";
+import { ensureAudio, vibrate, vibrateForKey, soundOn } from "./audio.js";
 import { addRipple, spawnBubbles } from "./bubbles.js";
 import { advanceCheck, dismissCheckOverlay } from "./checkOverlay.js";
 import { historyDrawer, clearHistory } from "./history.js";

@@ -1,6 +1,18 @@
-// ---------- Diagnostics: if the app crashes, show it ON SCREEN instead of failing silently ----------
-// Import this module FIRST in main.js so these listeners are active before any
-// other module's top-level code runs.
+// ---------- Diagnostics: Crash reporting + Global Safety Guards ----------
+if (typeof window !== "undefined" && typeof window.vibrate === "undefined") {
+  window.vibrate = function(ms) {
+    if (window.AndroidBridge && typeof window.AndroidBridge.vibrate === "function") {
+      try {
+        window.AndroidBridge.vibrate(Array.isArray(ms) ? ms.join(",") : String(ms));
+        return;
+      } catch (e) {}
+    }
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      try { navigator.vibrate(ms); } catch (e) {}
+    }
+  };
+}
+
 function showFatalError(msg) {
   let box = document.getElementById("fatalErrorBox");
   if (!box) {

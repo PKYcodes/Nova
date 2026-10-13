@@ -29,10 +29,13 @@ jobs:
         with:
           gradle-version: "8.7"
 
-      - name: Generate Release Signing Keystore
+      - name: Verify Permanent Release Keystore
         run: |
           mkdir -p keystore
-          if [ ! -f keystore/nova-release.jks ]; then
+          if [ -f keystore/nova-release.jks ]; then
+            echo "Permanent committed keystore/nova-release.jks verified! Using constant signing certificate."
+          else
+            echo "Generating fallback keystore..."
             keytool -genkeypair -v \
               -keystore keystore/nova-release.jks \
               -alias nova_key \
@@ -64,16 +67,19 @@ jobs:
           name: "Nova Calculator v1.0.0 — RV Group LTD | ♥️ BY PANKAJ"
           body: |
             ### ✦ Nova Calculator (Android APK Release)
-            **— powered by RV GROUP —**
+            **— powered by RV GROUP —**  
             **RV Group LTD | ♥️ BY PANKAJ**
 
             #### 📥 Direct APK Download
-            Neeche **Assets** section mein **`Nova-Calculator-v1.0.0-RV-Group.apk`** par tap karke direct apne Android phone mein install karein.
+            Neeche **Assets** section mein **`Nova-Calculator-v1.0.0-RV-Group.apk`** par tap karke download aur install karein.
+
+            > ⚠️ **Note**: Agar aapke phone mein purana test version pehle se installed tha, to pehle use phone se **Uninstall (Delete)** karein, fir ye naya build install karein. Is build mein permanent release keystore embed kar diya gaya hai, iske baad aage ke **saare future updates bina uninstall kiye direct update** hote rahenge!
 
             #### ✨ Highlights
-            - **2.3s Futuristic Opening Animation** featuring **RV Group LTD** logo & **— powered by RV GROUP —** lockup
-            - **BODMAS Calculator Engine** with live preview, tap-to-edit tokens, and step-by-step **CHECK** typewriter replay
-            - **Native Android Integration**: WhatsApp & Image Card Sharing, Hindi/English Voice TTS, Haptic Vibration, History `.txt` Export, Unit & Live Currency Converter, and Age Calculator
+            - **Fixed Calculation Engine**: `vibrate` ReferenceError bug fixed, all operations snappy & responsive.
+            - **Built-in Financial Tools**: India GST/Tax Calculator, Loan & EMI Calculator, and Cash Counter.
+            - **Direct Social Sharing**: 1-tap WhatsApp, Telegram, X, Facebook, and SMS calculation card share.
+            - **In-App Auto-Updater**: Direct in-app update notifications and 1-tap APK update download.
           files: |
             release-output/Nova-Calculator-v1.0.0-RV-Group.apk
             release-output/Nova-Calculator-Debug.apk

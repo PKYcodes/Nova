@@ -127,3 +127,5 @@ soundPackMenuItem.addEventListener("click", () => {
   sfxDigit("5");
   vibrate(6);
 });
+
+if (typeof window !== 'undefined') { window.vibrate = vibrate; }

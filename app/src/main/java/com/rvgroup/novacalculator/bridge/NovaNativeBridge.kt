@@ -84,5 +84,17 @@ class NovaNativeBridge(
     fun getBrandSignature(): String = "RV Group LTD | ♥️ BY PANKAJ"
 
     @JavascriptInterface
+    fun openExternalUrl(url: String) {
+        mainHandler.post {
+            try {
+                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url)).apply {
+                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+            } catch (_: Exception) {}
+        }
+    }
+
+    @JavascriptInterface
     fun getAppVersion(): String = "1.0.0"
 }
