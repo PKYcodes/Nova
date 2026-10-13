@@ -1,0 +1,19 @@
+/* ---------- Responsive: landscape layout, small-screen tweaks ---------- */
+/* ---------- Landscape: LCD/check/scientific on the left, keypad on the right ---------- */
+@media (orientation: landscape) and (max-height: 560px) {
+  body { align-items: flex-start; }
+  .app { padding: 10px 14px 12px; }
+  .topbar { margin-bottom: 8px; }
+  .case { flex-direction: row; gap: 14px; padding: 14px; }
+  .top-group { flex: 0 0 38%; display: flex; flex-direction: column; min-width: 0; }
+  .keypad { flex: 1; }
+  .lcd { min-height: 96px; padding: 16px 16px 12px; margin-bottom: 8px; }
+  .lcd-result { font-size: 34px !important; }
+  .check-row, .sci-wrap.expanded { margin-bottom: 8px; }
+  .footer-copyright { margin-top: 8px; }
+  .hint { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}

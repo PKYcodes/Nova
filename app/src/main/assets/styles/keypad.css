@@ -1,0 +1,158 @@
+/* ---------- Keypad: grid, keys, ripple/bubble tap animation ---------- */
+/* ---------- Keypad — CSS grid with named areas ---------- */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  grid-template-areas:
+    "his pm  dv  chk"
+    "ac  bs  pc  mul"
+    "n7  n8  n9  sub"
+    "n4  n5  n6  add"
+    "n1  n2  n3  add"
+    "dot n0  eq  eq";
+  gap: 10px;
+  flex: 1;
+}
+.key[data-pos="his"] { grid-area: his; }
+.key[data-pos="pm"]  { grid-area: pm; }
+.key[data-pos="dv"]  { grid-area: dv; }
+.key[data-pos="chk"] { grid-area: chk; }
+.key[data-pos="ac"]  { grid-area: ac; }
+.key[data-pos="bs"]  { grid-area: bs; }
+.key[data-pos="pc"]  { grid-area: pc; }
+.key[data-pos="mul"] { grid-area: mul; }
+.key[data-pos="n7"]  { grid-area: n7; }
+.key[data-pos="n8"]  { grid-area: n8; }
+.key[data-pos="n9"]  { grid-area: n9; }
+.key[data-pos="sub"] { grid-area: sub; }
+.key[data-pos="n4"]  { grid-area: n4; }
+.key[data-pos="n5"]  { grid-area: n5; }
+.key[data-pos="n6"]  { grid-area: n6; }
+.key[data-pos="add"] { grid-area: add; }
+.key[data-pos="n1"]  { grid-area: n1; }
+.key[data-pos="n2"]  { grid-area: n2; }
+.key[data-pos="n3"]  { grid-area: n3; }
+.key[data-pos="dot"] { grid-area: dot; }
+.key[data-pos="n0"]  { grid-area: n0; }
+.key[data-pos="eq"]  { grid-area: eq; }
+
+.key {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  font-family: var(--font-ui);
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 70ms var(--ease-fast), box-shadow 70ms var(--ease-fast), background 120ms;
+  user-select: none;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  will-change: transform;
+  min-height: 0;
+  min-width: 0;
+}
+
+.key-num {
+  background: rgba(255,255,255,0.055);
+  color: var(--text);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 6px 14px rgba(0,0,0,0.35);
+}
+.key-op {
+  background: linear-gradient(160deg, rgba(var(--pink-rgb),0.22), rgba(var(--violet-rgb),0.16));
+  color: var(--pink);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset, 0 6px 16px rgba(var(--pink-rgb),0.15);
+  font-size: 22px;
+}
+.key-add {
+  font-size: 26px;
+}
+.key-fn {
+  background: rgba(var(--orange-rgb),0.12);
+  color: var(--orange);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 6px 14px rgba(0,0,0,0.3);
+  font-size: 16px;
+}
+.key-danger {
+  background: linear-gradient(160deg, rgba(var(--red-rgb),0.28), rgba(var(--red-rgb),0.14));
+  color: var(--red);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset, 0 6px 16px rgba(var(--red-rgb),0.22);
+  border-color: rgba(var(--red-rgb),0.35);
+  font-size: 16px;
+  font-weight: 700;
+}
+.key[data-pos="his"] {
+  background: rgba(var(--violet-rgb),0.14);
+  color: var(--violet);
+  border-color: rgba(var(--violet-rgb),0.35);
+}
+.key-check {
+  background: rgba(var(--violet-rgb),0.14);
+  color: var(--violet);
+  border-color: rgba(var(--violet-rgb),0.35);
+}
+.key-check:disabled { opacity: 0.35; }
+.key-check:disabled:active { transform: none; }
+.key-eq {
+  background: linear-gradient(160deg, var(--green), rgba(var(--green-rgb),0.55));
+  color: #04140c;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.25) inset, 0 8px 22px rgba(var(--green-rgb),0.35);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.key:active, .key.pressed { transform: scale(0.96); }
+.key-num:active, .key-num.pressed { background: rgba(255,255,255,0.11); box-shadow: 0 0 0 rgba(0,0,0,0), 0 2px 6px rgba(0,0,0,0.3); }
+.key-op:active, .key-op.pressed { box-shadow: 0 0 18px rgba(var(--pink-rgb),0.45); }
+.key-fn:active, .key-fn.pressed { box-shadow: 0 0 14px rgba(var(--orange-rgb),0.35); }
+.key-danger:active, .key-danger.pressed { box-shadow: 0 0 18px rgba(var(--red-rgb),0.5); }
+.key-eq:active, .key-eq.pressed { box-shadow: 0 0 24px rgba(var(--green-rgb),0.6); }
+
+/* ripple (fast tech pulse) */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.55);
+  transform: scale(0);
+  animation: rippleAnim 380ms ease-out forwards;
+  pointer-events: none;
+}
+@keyframes rippleAnim { to { transform: scale(3); opacity: 0; } }
+
+/* floating bubble particles on tap */
+.bubble-layer { position: fixed; inset: 0; z-index: 50; pointer-events: none; overflow: hidden; }
+.bubble {
+  position: fixed;
+  pointer-events: none;
+  animation: bubbleUp var(--bdur, 700ms) ease-out forwards;
+  box-shadow: 0 0 9px 1px currentColor;
+}
+/* water-drop: rounded top, pointed tail beneath — like a droplet rising */
+.bubble.drop { border-radius: 50% 50% 50% 4%; }
+/* plain round bubble, for visual variety alongside the drops */
+.bubble.round { border-radius: 50%; }
+
+@keyframes bubbleUp {
+  0%   { transform: translate(0, 0) rotate(var(--brot, 0deg)) scale(0.35); opacity: 0.95; }
+  30%  { transform: translate(calc(var(--bx) * 0.28 + 5px), calc(var(--by) * 0.32)) rotate(var(--brot, 0deg)) scale(0.85); }
+  60%  { transform: translate(calc(var(--bx) * 0.62 - 6px), calc(var(--by) * 0.64)) rotate(var(--brot, 0deg)) scale(1.05); opacity: 0.7; }
+  100% { transform: translate(var(--bx), var(--by)) rotate(var(--brot, 0deg)) scale(1.25); opacity: 0; }
+}
+
+.footer-copyright {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text);
+  margin: 14px 0 0;
+  letter-spacing: 0.1em;
+  font-family: var(--font-display);
+  font-weight: 700;
+  opacity: 0.9;
+  text-shadow: 0 0 10px rgba(var(--violet-rgb),0.35);
+}
+

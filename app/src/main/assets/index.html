@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+<title>Nova — Calculator</title>
+<meta name="description" content="A futuristic glass calculator with BODMAS-correct math, live preview and editable history." />
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#06070d" />
+<link rel="icon" href="icons/icon-192.png" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Nova" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="styles/base.css" />
+<link rel="stylesheet" href="styles/layout.css" />
+<link rel="stylesheet" href="styles/lcd.css" />
+<link rel="stylesheet" href="styles/keypad.css" />
+<link rel="stylesheet" href="styles/drawers.css" />
+<link rel="stylesheet" href="styles/onboarding.css" />
+<link rel="stylesheet" href="styles/splash.css" />
+<link rel="stylesheet" href="styles/responsive.css" />
+</head>
+<body>
+
+<!-- 2.3s Brand Opening Splash Screen (RV Group LTD | ♥️ BY PANKAJ) -->
+<div class="splash-screen" id="splashScreen" aria-label="Opening Nova Calculator">
+  <span class="splash-orb splash-orb-1" aria-hidden="true"></span>
+  <span class="splash-orb splash-orb-2" aria-hidden="true"></span>
+  <div class="splash-spacer"></div>
+  <div class="splash-center">
+    <div class="splash-logo-card">
+      <img src="icons/rv-full-dark.png" alt="RV Group LTD — Powering Possibilities" class="splash-main-logo" />
+    </div>
+    <h1 class="splash-app-title">✦ NOVA CALCULATOR</h1>
+    <p class="splash-app-sub">Futuristic BODMAS Glass Calculator</p>
+    <div class="splash-loader-track" aria-hidden="true">
+      <div class="splash-loader-bar"></div>
+    </div>
+  </div>
+  <div class="splash-footer">
+    <img src="icons/rv-powered-dark.png" alt="Powered by RV Group" class="splash-powered-img" />
+    <p class="splash-credit">RV Group LTD | ♥️ BY PANKAJ</p>
+  </div>
+</div>
+
+<div class="bg-glow" aria-hidden="true">
+  <span class="orb orb-a"></span>
+  <span class="orb orb-b"></span>
+  <span class="orb orb-c"></span>
+  <span class="grid-overlay"></span>
+</div>
+
+<div class="app">
+
+  <header class="topbar">
+    <button class="brand-pill" id="brandPill" type="button" aria-label="RV Group LTD Branding" title="RV Group LTD | ♥️ BY PANKAJ">
+      <img src="icons/rv-mark-dark.png" alt="RV" class="brand-pill-logo" />
+      <span class="brand-pill-title">NOVA</span>
+    </button>
+    <div class="menu-wrap menu-wrap-solo">
+      <button id="menuBtn" class="icon-btn" aria-label="More options" title="More">
+        <svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="5" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="19" r="1.8" fill="currentColor"/></svg>
+      </button>
+      <div class="menu-dropdown" id="menuDropdown" hidden>
+        <button class="menu-item" id="installMenuItem">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 3v10.6l3.3-3.3 1.4 1.4L12 17.4l-4.7-4.7 1.4-1.4 3.3 3.3V3h2zM5 19h14v2H5z" fill="currentColor"/></svg>
+          <span id="installMenuLabel">Install App</span>
+        </button>
+        <button class="menu-item" id="converterMenuItem">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M7 10l-3 3 3 3M4 13h14M17 4l3 3-3 3M21 7H7" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Unit Converter</span>
+        </button>
+        <button class="menu-item" id="ageMenuItem">
+          <svg viewBox="0 0 24 24" width="16" height="16"><rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M3 9h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <span>Age / Date Calculator</span>
+        </button>
+        <button class="menu-item" id="shareResultMenuItem" disabled>
+          <svg viewBox="0 0 24 24" width="16" height="16"><circle cx="18" cy="5" r="2.4" stroke="currentColor" stroke-width="1.8" fill="none"/><circle cx="6" cy="12" r="2.4" stroke="currentColor" stroke-width="1.8" fill="none"/><circle cx="18" cy="19" r="2.4" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M8.1 10.7l7.8-4.4M8.1 13.3l7.8 4.4" stroke="currentColor" stroke-width="1.8"/></svg>
+          <span>Share Last Result</span>
+        </button>
+        <button class="menu-item" id="shareWhatsappMenuItem" disabled>
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M8.5 8.7c.2-.5.5-.5.8-.5h.6c.2 0 .4 0 .6.5.2.5.7 1.7.7 1.9s0 .3-.1.5c-.2.3-.4.5-.6.7-.2.2-.4.4-.2.7.3.5 1 1.4 2.1 2 .3.2.6.4.9.1.3-.3.9-1 1.1-1.3.2-.3.5-.2.8-.1l1.7.8c.2.1.4.2.5.4.1.3.1 1-.2 1.6-.3.6-1.5 1.2-2.1 1.2-.6 0-1.4.1-4.6-1.9-2.6-1.6-3.6-4.3-3.7-4.5-.1-.2-.9-1.2-.9-2.3 0-1.1.6-1.6.8-1.8z" fill="currentColor"/></svg>
+          <span>Share via WhatsApp</span>
+        </button>
+        <button class="menu-item" id="pasteMenuItem">
+          <svg viewBox="0 0 24 24" width="16" height="16"><rect x="6" y="4" width="12" height="17" rx="2" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>
+          <span>Paste Number</span>
+        </button>
+
+        <div class="menu-section-label">Settings</div>
+        <button class="menu-item" id="themeMenuItem">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 2a10 10 0 1 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.4-.5-.8-.5-1.3 0-1.1.9-2 2-2h2.3A5.2 5.2 0 0 0 22 10.5C22 5.8 17.5 2 12 2z" fill="currentColor"/></svg>
+          <span id="themeMenuLabel">Theme: Nebula</span>
+        </button>
+        <button class="menu-item" id="soundMenuItem">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 5V4L8 9H4z" fill="currentColor"/></svg>
+          <span id="soundMenuLabel">Sound: On</span>
+        </button>
+        <button class="menu-item" id="soundPackMenuItem">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 9v6h4l5 5V4L8 9H4z" fill="currentColor"/></svg>
+          <span id="soundPackMenuLabel">Sound Pack: Glass</span>
+        </button>
+        <button class="menu-item" id="sciMenuItem">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M9 3v6.5L4 18a2 2 0 0 0 1.7 3h12.6a2 2 0 0 0 1.7-3l-5-8.5V3" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linejoin="round"/></svg>
+          <span id="sciMenuLabel">Scientific: Off</span>
+        </button>
+        <button class="menu-item" id="formatMenuItem">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 6h16M4 12h10M4 18h13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <span id="formatMenuLabel">Format: International</span>
+        </button>
+        <button class="menu-item" id="voiceMenuItem">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M6 11a6 6 0 0 0 12 0M12 17v3" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+          <span id="voiceMenuLabel">Voice: Hindi</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="case" id="calcCase">
+    <div class="top-group">
+      <div class="lcd" id="lcd">
+        <span class="mem-badge" id="memBadge" hidden>M</span>
+        <div class="lcd-top-right">
+          <button class="paste-badge" id="pasteBadge" aria-label="Paste number from clipboard">
+            <svg viewBox="0 0 24 24" width="11" height="11"><rect x="6" y="4" width="12" height="17" rx="2" stroke="currentColor" stroke-width="2" fill="none"/><path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+          </button>
+          <span class="entry-badge" id="entryBadge" hidden><span id="entryCount">0</span></span>
+        </div>
+        <div class="lcd-line lcd-expr" id="exprLine">&nbsp;</div>
+        <div class="lcd-line lcd-result" id="resultLine">0</div>
+        <div class="lcd-line lcd-preview" id="previewLine">&nbsp;</div>
+        <div class="lcd-scan" aria-hidden="true"></div>
+        <div class="check-overlay" id="checkOverlay" hidden>
+          <span class="check-overlay-text" id="checkOverlayText"></span>
+          <span class="check-overlay-progress" id="checkOverlayProgress"></span>
+        </div>
+        <div class="toast" id="toast"></div>
+      </div>
+
+      <div class="sci-wrap" id="sciWrap">
+        <div class="sci-row">
+          <button class="key key-sci" data-pos="mc" data-action="mc">MC</button>
+          <button class="key key-sci" data-pos="mr" data-action="mr">MR</button>
+          <button class="key key-sci" data-pos="mplus" data-action="mplus">M+</button>
+          <button class="key key-sci" data-pos="mminus" data-action="mminus">M−</button>
+          <button class="key key-sci" data-pos="sqrt" data-action="sqrt">√</button>
+          <button class="key key-sci" data-pos="square" data-action="square">x²</button>
+          <button class="key key-sci" data-pos="pi" data-action="pi">π</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="keypad" id="keypad">
+      <button class="key key-fn" data-pos="his" data-action="history">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 12a9 9 0 1 0 3-6.7M3 12V6M3 12h6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="key key-fn" data-pos="pm" data-action="sign">±</button>
+      <button class="key key-op" data-pos="dv" data-action="op" data-op="÷">÷</button>
+      <button class="key key-fn key-check" data-pos="chk" data-action="check" id="checkKey" disabled>
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <button class="key key-danger" data-pos="ac" data-action="clear" id="clearKey">AC</button>
+      <button class="key key-fn" data-pos="bs" data-action="backspace">⌫</button>
+      <button class="key key-fn" data-pos="pc" data-action="percent">%</button>
+
+      <button class="key key-op" data-pos="mul" data-action="op" data-op="×">×</button>
+
+      <button class="key key-num" data-pos="n7" data-digit="7">7</button>
+      <button class="key key-num" data-pos="n8" data-digit="8">8</button>
+      <button class="key key-num" data-pos="n9" data-digit="9">9</button>
+      <button class="key key-op" data-pos="sub" data-action="op" data-op="−">−</button>
+
+      <button class="key key-num" data-pos="n4" data-digit="4">4</button>
+      <button class="key key-num" data-pos="n5" data-digit="5">5</button>
+      <button class="key key-num" data-pos="n6" data-digit="6">6</button>
+      <button class="key key-op key-add" data-pos="add" data-action="op" data-op="+">+</button>
+
+      <button class="key key-num" data-pos="n1" data-digit="1">1</button>
+      <button class="key key-num" data-pos="n2" data-digit="2">2</button>
+      <button class="key key-num" data-pos="n3" data-digit="3">3</button>
+
+      <button class="key key-num" data-pos="dot" data-action="decimal">.</button>
+      <button class="key key-num" data-pos="n0" data-digit="0">0</button>
+      <button class="key key-eq" data-pos="eq" data-action="equals">=</button>
+    </div>
+  </main>
+
+  <footer class="footer-brand">
+    <img src="icons/rv-powered-dark.png" alt="Powered by RV Group" class="footer-powered-logo" />
+    <p class="footer-copyright">RV Group LTD | ♥️ BY PANKAJ</p>
+  </footer>
+</div>
+
+<!-- History drawer -->
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<section class="drawer" id="drawer" aria-label="Calculation history">
+  <div class="drawer-handle" id="drawerHandle"></div>
+  <div class="drawer-header">
+    <h2><span class="drawer-dot"></span> history</h2>
+    <div class="drawer-header-actions">
+      <button class="select-mode-btn" id="exportHistoryBtn" title="Export">⬇</button>
+      <button class="select-mode-btn" id="selectModeBtn">select</button>
+      <button class="clear-history" id="clearHistory">clear all</button>
+    </div>
+  </div>
+  <div class="drawer-search">
+    <svg class="search-icon" viewBox="0 0 24 24" width="14" height="14"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <input type="text" id="historySearchInput" class="drawer-search-input" placeholder="Search history…" autocomplete="off" />
+    <button class="search-clear" id="historySearchClear" hidden aria-label="Clear search">✕</button>
+  </div>
+  <div class="tape-scroll" id="tapeScroll">
+    <div class="tape-empty" id="tapeEmpty">abhi kuch calculate nahi hua — kuch type karke dekho</div>
+    <div class="tape-empty" id="tapeNoMatch" hidden>koi match nahi mila</div>
+    <ul class="tape-list" id="tapeList"></ul>
+  </div>
+  <div class="selection-bar" id="selectionBar" hidden>
+    <button class="sel-cancel" id="selectCancelBtn">cancel</button>
+    <span class="sel-count" id="selectionCount">0 selected</span>
+    <button class="sel-delete" id="selectDeleteBtn" disabled>delete</button>
+  </div>
+</section>
+
+<!-- Unit converter -->
+<div class="drawer-backdrop" id="convBackdrop"></div>
+<section class="drawer conv-drawer" id="convDrawer" aria-label="Unit converter">
+  <div class="drawer-handle" id="convHandle"></div>
+  <div class="drawer-header">
+    <h2><span class="drawer-dot"></span> unit converter</h2>
+    <button class="clear-history" id="convCloseBtn">close</button>
+  </div>
+  <div class="conv-body">
+    <div class="conv-tabs" id="convTabs">
+      <button class="conv-tab active" data-cat="length">Length</button>
+      <button class="conv-tab" data-cat="weight">Weight</button>
+      <button class="conv-tab" data-cat="temp">Temp</button>
+      <button class="conv-tab" data-cat="currency">Currency</button>
+    </div>
+    <div class="conv-row">
+      <input type="text" inputmode="decimal" class="conv-input" id="convFromInput" value="1" />
+      <select class="conv-select" id="convFromUnit"></select>
+    </div>
+    <button class="conv-swap" id="convSwapBtn" aria-label="Swap units">
+      <svg viewBox="0 0 24 24" width="18" height="18"><path d="M7 10l-5 4 5 4M2 14h20M17 4l5 4-5 4M22 8H2" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="conv-row">
+      <input type="text" class="conv-input conv-output" id="convToOutput" value="" readonly />
+      <select class="conv-select" id="convToUnit"></select>
+    </div>
+  </div>
+</section>
+
+<!-- Age / Date calculator -->
+<div class="drawer-backdrop" id="ageBackdrop"></div>
+<section class="drawer conv-drawer" id="ageDrawer" aria-label="Age and date calculator">
+  <div class="drawer-handle" id="ageHandle"></div>
+  <div class="drawer-header">
+    <h2><span class="drawer-dot"></span> age / date</h2>
+    <button class="clear-history" id="ageCloseBtn">close</button>
+  </div>
+  <div class="conv-body">
+    <label class="age-label">From date</label>
+    <input type="date" class="conv-input age-date" id="ageFromDate" />
+    <label class="age-label">To date</label>
+    <input type="date" class="conv-input age-date" id="ageToDate" />
+    <div class="age-result" id="ageResult">Dono dates chuno</div>
+  </div>
+</section>
+
+<!-- First-run welcome / gestures overview — shown once, gated on ONBOARDING_KEY -->
+<div class="onboarding-overlay" id="onboardingOverlay" hidden>
+  <div class="onboarding-card">
+    <div class="onboarding-title">✦ Nova Calculator mein swagat hai</div>
+    <p class="onboarding-sub">Kuch cheezein jo turant kaam aayengi:</p>
+    <ul class="onboarding-list">
+      <li><b>Number pe tap karo</b> — us number ke andar edit-caret le jaata hai</li>
+      <li><b>Result ko long-press karo</b> — copy ho jaata hai clipboard mein</li>
+      <li><b>CHECK button</b> — step-by-step breakdown; 3 sec hold = auto-play</li>
+      <li><b>History mein kisi entry pe tap</b> — usi result se aage calculate continue karo</li>
+      <li><b>⋮ menu</b> — paste, share (WhatsApp bhi), unit converter, age calculator, theme — sab yahin</li>
+    </ul>
+    <div class="onboarding-brand">
+      <img src="icons/rv-powered-dark.png" alt="Powered by RV Group" />
+      <span>RV Group LTD | ♥️ BY PANKAJ</span>
+    </div>
+    <button class="onboarding-btn" id="onboardingContinueBtn">Continue — I understand</button>
+  </div>
+</div>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

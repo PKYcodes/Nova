@@ -1,0 +1,79 @@
+// ---------- Every DOM element the app touches, in one place ----------
+// Every other module imports what it needs from here instead of calling
+// document.getElementById itself — one source of truth, easy to audit.
+
+export const exprLine = document.getElementById("exprLine");
+export const resultLine = document.getElementById("resultLine");
+export const previewLine = document.getElementById("previewLine");
+export const keypad = document.getElementById("keypad");
+export const clearKey = document.getElementById("clearKey");
+export const menuBtn = document.getElementById("menuBtn");
+export const menuDropdown = document.getElementById("menuDropdown");
+export const installMenuItem = document.getElementById("installMenuItem");
+export const installMenuLabel = document.getElementById("installMenuLabel");
+export const toast = document.getElementById("toast");
+export const calcCase = document.getElementById("calcCase");
+export const memBadge = document.getElementById("memBadge");
+export const entryBadge = document.getElementById("entryBadge");
+export const entryCountEl = document.getElementById("entryCount");
+export const pasteBadge = document.getElementById("pasteBadge");
+export const sciWrap = document.getElementById("sciWrap");
+export const sciMenuItem = document.getElementById("sciMenuItem");
+export const sciMenuLabel = document.getElementById("sciMenuLabel");
+export const formatMenuItem = document.getElementById("formatMenuItem");
+export const formatMenuLabel = document.getElementById("formatMenuLabel");
+export const voiceMenuItem = document.getElementById("voiceMenuItem");
+export const voiceMenuLabel = document.getElementById("voiceMenuLabel");
+export const converterMenuItem = document.getElementById("converterMenuItem");
+export const ageMenuItem = document.getElementById("ageMenuItem");
+export const soundPackMenuItem = document.getElementById("soundPackMenuItem");
+export const soundPackMenuLabel = document.getElementById("soundPackMenuLabel");
+export const shareResultMenuItem = document.getElementById("shareResultMenuItem");
+export const shareWhatsappMenuItem = document.getElementById("shareWhatsappMenuItem");
+export const pasteMenuItem = document.getElementById("pasteMenuItem");
+export const exportHistoryBtn = document.getElementById("exportHistoryBtn");
+export const historySearchInput = document.getElementById("historySearchInput");
+export const historySearchClear = document.getElementById("historySearchClear");
+export const tapeNoMatch = document.getElementById("tapeNoMatch");
+export const themeMenuItem = document.getElementById("themeMenuItem");
+export const themeMenuLabel = document.getElementById("themeMenuLabel");
+export const soundMenuItem = document.getElementById("soundMenuItem");
+export const soundMenuLabel = document.getElementById("soundMenuLabel");
+export const checkKey = document.getElementById("checkKey");
+export const checkOverlay = document.getElementById("checkOverlay");
+export const checkOverlayText = document.getElementById("checkOverlayText");
+export const checkOverlayProgress = document.getElementById("checkOverlayProgress");
+
+export const drawer = document.getElementById("drawer");
+export const drawerBackdrop = document.getElementById("drawerBackdrop");
+export const drawerHandle = document.getElementById("drawerHandle");
+export const tapeScroll = document.getElementById("tapeScroll");
+export const tapeList = document.getElementById("tapeList");
+export const tapeEmpty = document.getElementById("tapeEmpty");
+export const clearHistoryBtn = document.getElementById("clearHistory");
+export const selectModeBtn = document.getElementById("selectModeBtn");
+export const selectionBar = document.getElementById("selectionBar");
+export const selectionCount = document.getElementById("selectionCount");
+export const selectDeleteBtn = document.getElementById("selectDeleteBtn");
+export const selectCancelBtn = document.getElementById("selectCancelBtn");
+
+export const convBackdrop = document.getElementById("convBackdrop");
+export const convDrawer = document.getElementById("convDrawer");
+export const convHandle = document.getElementById("convHandle");
+export const convCloseBtn = document.getElementById("convCloseBtn");
+export const convTabs = document.getElementById("convTabs");
+export const convFromInput = document.getElementById("convFromInput");
+export const convToOutput = document.getElementById("convToOutput");
+export const convFromUnit = document.getElementById("convFromUnit");
+export const convToUnit = document.getElementById("convToUnit");
+export const convSwapBtn = document.getElementById("convSwapBtn");
+
+export const ageBackdrop = document.getElementById("ageBackdrop");
+export const ageDrawer = document.getElementById("ageDrawer");
+export const ageHandle = document.getElementById("ageHandle");
+export const ageCloseBtn = document.getElementById("ageCloseBtn");
+export const ageFromDate = document.getElementById("ageFromDate");
+export const ageToDate = document.getElementById("ageToDate");
+export const ageResult = document.getElementById("ageResult");
+export const onboardingOverlay = document.getElementById("onboardingOverlay");
+export const onboardingContinueBtn = document.getElementById("onboardingContinueBtn");

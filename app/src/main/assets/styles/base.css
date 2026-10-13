@@ -1,0 +1,111 @@
+/* ---------- Base: reset, CSS variables, themes, animated background ---------- */
+:root {
+  --bg: #06070d;
+  --glass: rgba(255,255,255,0.055);
+  --glass-hi: rgba(255,255,255,0.09);
+  --glass-border: rgba(255,255,255,0.12);
+  --text: #eef2ff;
+  --text-dim: #8a90ad;
+  --font-display: "Orbitron", monospace;
+  --font-ui: "Space Grotesk", sans-serif;
+  --ease-fast: cubic-bezier(.2,.8,.2,1);
+
+  /* accent palette — overridden per theme below */
+  --cyan: #33f2e8;      --cyan-rgb: 51,242,232;
+  --violet: #8a5cff;    --violet-rgb: 138,92,255;
+  --pink: #ff4fd8;      --pink-rgb: 255,79,216;
+  --green: #3dffa0;     --green-rgb: 61,255,160;
+  --orange: #ffb23d;    --orange-rgb: 255,178,61;
+  --red: #ff4d6d;       --red-rgb: 255,77,109;
+}
+
+/* ---------- Theme variants ---------- */
+:root[data-theme="cyber"] {
+  --cyan: #39ff88;      --cyan-rgb: 57,255,136;
+  --violet: #22e0a3;    --violet-rgb: 34,224,163;
+  --pink: #9dff6b;      --pink-rgb: 157,255,107;
+  --green: #39ff88;     --green-rgb: 57,255,136;
+  --orange: #e8ff5c;    --orange-rgb: 232,255,92;
+  --red: #ff5c5c;       --red-rgb: 255,92,92;
+}
+:root[data-theme="sunset"] {
+  --cyan: #ffb23d;      --cyan-rgb: 255,178,61;
+  --violet: #ff5f6d;    --violet-rgb: 255,95,109;
+  --pink: #ff2b6d;      --pink-rgb: 255,43,109;
+  --green: #ffd93d;     --green-rgb: 255,217,61;
+  --orange: #ff8a3d;    --orange-rgb: 255,138,61;
+  --red: #ff3d3d;       --red-rgb: 255,61,61;
+}
+:root[data-theme="ocean"] {
+  --cyan: #3ddcff;      --cyan-rgb: 61,220,255;
+  --violet: #3d7bff;    --violet-rgb: 61,123,255;
+  --pink: #3dc9ff;      --pink-rgb: 61,201,255;
+  --green: #3dffd6;     --green-rgb: 61,255,214;
+  --orange: #6fb8ff;    --orange-rgb: 111,184,255;
+  --red: #ff6b6b;       --red-rgb: 255,107,107;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  overscroll-behavior: none;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: env(safe-area-inset-top, 0) 0 env(safe-area-inset-bottom, 0);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ---------- Animated background ---------- */
+.bg-glow {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.35;
+  mix-blend-mode: screen;
+  transition: background 300ms ease;
+}
+.orb-a { width: 340px; height: 340px; background: var(--violet); top: -100px; left: -80px; animation: driftA 16s ease-in-out infinite alternate; }
+.orb-b { width: 300px; height: 300px; background: var(--cyan); bottom: -80px; right: -60px; animation: driftB 18s ease-in-out infinite alternate; }
+.orb-c { width: 220px; height: 220px; background: var(--pink); top: 40%; left: 60%; animation: driftC 14s ease-in-out infinite alternate; }
+@keyframes driftA { to { transform: translate(60px, 80px) scale(1.15); } }
+@keyframes driftB { to { transform: translate(-50px, -70px) scale(1.2); } }
+@keyframes driftC { to { transform: translate(-70px, 40px) scale(0.9); } }
+
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: radial-gradient(circle at 50% 30%, black, transparent 75%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb { animation: none; }
+}
+
