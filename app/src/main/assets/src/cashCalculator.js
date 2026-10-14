@@ -19,7 +19,7 @@ const cashInWordsEl = document.getElementById("cashInWords");
 
 const drawerControls = makeDrawerControls(cashDrawer, cashBackdrop, cashHandle);
 
-const DENOMINATIONS = [500, 200, 100, 50, 20, 10];
+const DENOMINATIONS = [500, 200, 100, 50, 20, 10, 5, 2, 1];
 
 export function calculateCash() {
   let grandTotal = 0;
@@ -105,4 +105,16 @@ if (cashCloseBtn) cashCloseBtn.addEventListener("click", drawerControls.close);
 export function openCashCalc() {
   calculateCash();
   drawerControls.open();
+}
+
+const cashSpeakBtn = document.getElementById("cashSpeakBtn");
+if (cashSpeakBtn) {
+  cashSpeakBtn.addEventListener("click", () => {
+    const { grandTotal } = calculateCash();
+    const words = numberToWordsFull(grandTotal.toString(), voiceLang);
+    const enWords = numberToWordsFull(grandTotal.toString(), "en");
+    showToast(words, 2200);
+    speakNumber(words, true, enWords);
+    vibrate(8);
+  });
 }

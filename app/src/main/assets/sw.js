@@ -1,4 +1,4 @@
-const CACHE_NAME = "nova-calc-v27";
+const CACHE_NAME = "nova-calc-v28";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -45,6 +45,8 @@ const APP_SHELL = [
   "./src/gstCalculator.js",
   "./src/emiCalculator.js",
   "./src/cashCalculator.js",
+  "./src/discountCalculator.js",
+  "./src/splitCalculator.js",
   "./src/updater.js",
   "./src/ageCalculator.js",
   "./src/drawers.js",

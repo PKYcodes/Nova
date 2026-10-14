@@ -29,12 +29,17 @@ function handleKeyAction(btn) {
     case "equals": state.equals(); render(); break;
     case "sqrt": state.applySqrt(); render(); break;
     case "square": state.applySquare(); render(); break;
+    case "cube": state.applyCube(); render(); break;
+    case "inv": state.applyReciprocal(); render(); break;
+    case "sin": state.applyTrig("sin"); render(); break;
+    case "cos": state.applyTrig("cos"); render(); break;
+    case "tan": state.applyTrig("tan"); render(); break;
     case "pi": state.insertPi(); render(); break;
     case "mc": state.memoryClear(); updateMemoryBadge(); break;
     case "mr": state.memoryRecall(); render(); break;
     case "mplus": state.memoryAdd(1); updateMemoryBadge(); break;
     case "mminus": state.memoryAdd(-1); updateMemoryBadge(); break;
-    case "history": historyDrawer.open(); break;
+    case "history": setTimeout(() => { historyDrawer.open(); }, 60); break;
     case "check": advanceCheck(); break;
   }
 }
@@ -88,8 +93,9 @@ if (speakBadge) {
     ensureAudio();
     if (state.current !== "Error") {
       const words = numberToWordsFull(state.current, voiceLang);
+      const enWords = numberToWordsFull(state.current, "en");
       showToast(words, 2200);
-      speakNumber(words, true);
+      speakNumber(words, true, enWords);
       vibrate(10);
     }
   });
@@ -131,8 +137,9 @@ resultLine.addEventListener("pointerup", () => {
     lastResultTap = 0;
     if (state.current !== "Error" && !copyLongPressFired) {
       const words = numberToWordsFull(state.current, voiceLang);
+      const enWords = numberToWordsFull(state.current, "en");
       showToast(words, Math.min(6000, 1500 + words.length * 35));
-      speakNumber(words, soundOn);
+      speakNumber(words, soundOn, enWords);
       if (navigator.vibrate) { try { navigator.vibrate([10, 20, 10]); } catch (e) {} }
     }
   } else {

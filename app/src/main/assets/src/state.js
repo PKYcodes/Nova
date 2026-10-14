@@ -257,6 +257,54 @@ class CalculatorState {
     sfxOperator();
   }
 
+  applyCube() {
+    const s = this.activeStr();
+    if (s === "Error") return;
+    const val = trimNumber(Math.pow(parseFloat(s), 3));
+    this.setActiveStr(val);
+    this.caretPos = val.length;
+    sfxOperator();
+  }
+
+  applyReciprocal() {
+    const s = this.activeStr();
+    if (s === "Error") return;
+    const n = parseFloat(s);
+    if (n === 0) {
+      this.current = "Error"; this.tokens = []; this.awaitingNewNumber = false;
+      this.editingTokenIndex = null; this.frozenExpr = null;
+      sfxError(); hooks.onError?.(); return;
+    }
+    const val = trimNumber(1 / n);
+    this.setActiveStr(val);
+    this.caretPos = val.length;
+    sfxOperator();
+  }
+
+  applyTrig(fn) {
+    const s = this.activeStr();
+    if (s === "Error") return;
+    const deg = parseFloat(s);
+    if (isNaN(deg)) return;
+    const rad = (deg * Math.PI) / 180;
+    let res;
+    if (fn === "sin") res = Math.sin(rad);
+    else if (fn === "cos") res = Math.cos(rad);
+    else if (fn === "tan") {
+      if (Math.abs(deg % 180) === 90) {
+        this.current = "Error"; this.tokens = []; this.awaitingNewNumber = false;
+        this.editingTokenIndex = null; this.frozenExpr = null;
+        sfxError(); hooks.onError?.(); return;
+      }
+      res = Math.tan(rad);
+    }
+    if (Math.abs(res) < 1e-12) res = 0;
+    const val = trimNumber(res);
+    this.setActiveStr(val);
+    this.caretPos = val.length;
+    sfxOperator();
+  }
+
   insertPi() {
     if (this.activeStr() === "Error") return;
     const val = trimNumber(Math.PI);

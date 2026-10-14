@@ -1,18 +1,17 @@
-// ---------- Check feature: step-by-step breakdown, colorful typewriter overlay on the LCD ----------
-import { checkKey, checkOverlay, checkOverlayText, checkOverlayProgress } from "./dom.js";
+// ---------- Citizen/Casio Style Step-by-Step CHECK & Review ----------
+import { checkKey, checkOverlay, checkOverlayText, checkOverlayProgress, exprLine, resultLine, previewLine } from "./dom.js";
 import { state } from "./state.js";
 import { formatNumber } from "./core/format.js";
 import { numberFormat } from "./settings.js";
-import { sfxOperator, vibrate } from "./audio.js";
+import { sfxOperator } from "./audio.js";
+import { showToast } from "./toast.js";
 
 function fmt(numStr) { return formatNumber(numStr, numberFormat); }
 
 let checkSeq = [];
 let checkIndex = -1;
-let checkHoldTimer = null;
 let checkAutoTimer = null;
-let checkLongPressFired = false;
-let checkActive = false;
+let isCheckActive = false;
 
 export const OP_META = {
   "+": { cls: "op-plus", label: "+" },
@@ -21,101 +20,134 @@ export const OP_META = {
   "÷": { cls: "op-div", label: "÷" },
 };
 
-// no "Type kiya" intro — jump straight into the BODMAS steps, then the final answer
+function getActiveCalculation() {
+  if (state.lastCalc && state.lastCalc.steps && state.lastCalc.steps.length > 0) {
+    return state.lastCalc;
+  }
+  // Fallback: check most recent entry from saved History
+  try {
+    const history = JSON.parse(localStorage.getItem("nova-calc-history-v2")) || [];
+    if (history.length > 0 && history[0].steps && history[0].steps.length > 0) {
+      return history[0];
+    }
+  } catch (e) {}
+  return null;
+}
+
 function buildCheckSequence(calc) {
-  const seq = calc.steps.map((s) => ({ type: "step", a: s.a, op: s.op, b: s.b, result: s.result }));
-  seq.push({ type: "final", result: calc.result });
+  const seq = calc.steps.map((s, i) => ({
+    stepNum: i + 1,
+    totalSteps: calc.steps.length,
+    a: s.a,
+    op: s.op,
+    b: s.b,
+    result: s.result,
+    isFinal: false
+  }));
+  seq.push({
+    stepNum: calc.steps.length + 1,
+    totalSteps: calc.steps.length,
+    result: calc.result,
+    isFinal: true
+  });
   return seq;
 }
 
-function frameHTML(frame) {
-  if (frame.type === "final") {
-    return `<span class="ct-final">Final Answer = ${fmt(frame.result)}</span>`;
+function renderCheckStep(step) {
+  checkOverlay.hidden = false;
+  if (step.isFinal) {
+    checkOverlayText.innerHTML = `<span class="ct-final">Final = ${fmt(step.result)}</span>`;
+    checkOverlayProgress.textContent = `[ FINAL ANSWER ]`;
+  } else {
+    const meta = OP_META[step.op] || { cls: "op-plus" };
+    checkOverlayText.innerHTML =
+      `<span class="ct-num">${fmt(step.a)}</span>` +
+      `<span class="ct-op ${meta.cls}">${step.op}</span>` +
+      `<span class="ct-num">${fmt(step.b)}</span>` +
+      `<span class="ct-eq">=</span>` +
+      `<span class="ct-result">${fmt(step.result)}</span>`;
+    checkOverlayProgress.textContent = `CHECK • STEP ${step.stepNum} of ${step.totalSteps}`;
   }
-  const meta = OP_META[frame.op] || { cls: "op-plus" };
-  return (
-    `<span class="ct-num">${fmt(frame.a)}</span>` +
-    `<span class="ct-op ${meta.cls}">${frame.op}</span>` +
-    `<span class="ct-num">${fmt(frame.b)}</span>` +
-    `<span class="ct-eq">=</span>` +
-    `<span class="ct-result">${fmt(frame.result)}</span>`
+}
+
+export function advanceCheck() {
+  const calc = getActiveCalculation();
+  if (!calc) {
+    showToast("Pehle koi calculation karein, fir CHECK karein");
+    if (window.vibrate) window.vibrate(8);
+    return;
+  }
+
+  if (!isCheckActive) {
+    checkSeq = buildCheckSequence(calc);
+    checkIndex = 0;
+    isCheckActive = true;
+    checkKey.classList.add("check-reviewing");
+  } else {
+    checkIndex++;
+    if (checkIndex >= checkSeq.length) {
+      dismissCheckOverlay();
+      return;
+    }
+  }
+
+  renderCheckStep(checkSeq[checkIndex]);
+  sfxOperator();
+  if (window.vibrate) window.vibrate(6);
+}
+
+export function dismissCheckOverlay() {
+  if (!isCheckActive) return;
+  isCheckActive = false;
+  checkIndex = -1;
+  checkOverlay.hidden = true;
+  checkKey.classList.remove("check-reviewing");
+  if (checkAutoTimer) {
+    clearInterval(checkAutoTimer);
+    checkAutoTimer = null;
+  }
+}
+
+// Auto-play review on long-press (1.5 seconds)
+let checkHoldTimer = null;
+if (checkKey) {
+  checkKey.disabled = false; // Never permanently disabled!
+
+  checkKey.addEventListener("pointerdown", () => {
+    checkHoldTimer = setTimeout(() => {
+      startAutoReview();
+    }, 1500);
+  });
+
+  ["pointerup", "pointerleave", "pointercancel"].forEach((ev) =>
+    checkKey.addEventListener(ev, () => clearTimeout(checkHoldTimer))
   );
 }
 
-// CSS can't smoothly animate to width:auto, so measure the real pixel width first,
-// then transition from 0 to that exact value with a stepped (typewriter) timing.
-function typewriterReveal(el, durationMs) {
-  el.style.transition = "none";
-  el.style.width = "auto";
-  const target = el.scrollWidth;
-  el.style.width = "0px";
-  void el.offsetWidth; // force reflow so width:0 registers before the transition starts
-  const len = el.textContent.length || 1;
-  el.style.transition = `width ${durationMs}ms steps(${len}, end)`;
-  requestAnimationFrame(() => { el.style.width = target + "px"; });
-}
+function startAutoReview() {
+  const calc = getActiveCalculation();
+  if (!calc) return;
+  checkSeq = buildCheckSequence(calc);
+  checkIndex = 0;
+  isCheckActive = true;
+  checkKey.classList.add("check-reviewing");
+  renderCheckStep(checkSeq[0]);
+  if (window.vibrate) window.vibrate([10, 20, 10]);
 
-function showCheckStep(i) {
-  if (!checkSeq.length) return;
-  checkActive = true;
-  checkIndex = ((i % checkSeq.length) + checkSeq.length) % checkSeq.length;
-  const frame = checkSeq[checkIndex];
-
-  checkOverlay.hidden = false;
-  checkOverlayText.innerHTML = frameHTML(frame);
-  checkOverlayProgress.textContent = `${checkIndex + 1}/${checkSeq.length}`;
-  typewriterReveal(checkOverlayText, 400);
-}
-function hideCheckPanel() {
-  checkActive = false;
-  checkIndex = -1;
-  checkOverlay.hidden = true;
-  clearInterval(checkAutoTimer);
-  checkAutoTimer = null;
-}
-export function advanceCheck() {
-  if (!state.lastCalc) return;
-  if (!checkActive) { checkSeq = buildCheckSequence(state.lastCalc); showCheckStep(0); }
-  else if (checkIndex >= checkSeq.length - 1) hideCheckPanel();
-  else showCheckStep(checkIndex + 1);
-  sfxOperator();
-}
-function startAutoPlay() {
-  if (!state.lastCalc) return;
-  checkSeq = buildCheckSequence(state.lastCalc);
-  showCheckStep(0);
-  vibrate([10, 20, 10]);
   clearInterval(checkAutoTimer);
   checkAutoTimer = setInterval(() => {
-    if (checkIndex >= checkSeq.length - 1) {
+    checkIndex++;
+    if (checkIndex >= checkSeq.length) {
       clearInterval(checkAutoTimer);
       checkAutoTimer = null;
-      setTimeout(hideCheckPanel, 900);
+      setTimeout(dismissCheckOverlay, 900);
       return;
     }
-    showCheckStep(checkIndex + 1);
-  }, 900); // fast auto-advance
+    renderCheckStep(checkSeq[checkIndex]);
+    sfxOperator();
+  }, 900);
 }
 
-checkKey.addEventListener("pointerdown", () => {
-  if (checkKey.disabled) return;
-  checkLongPressFired = false;
-  checkHoldTimer = setTimeout(() => { checkLongPressFired = true; startAutoPlay(); }, 3000);
-});
-checkKey.addEventListener("pointerup", () => { clearTimeout(checkHoldTimer); });
-["pointerleave", "pointercancel"].forEach((ev) =>
-  checkKey.addEventListener(ev, () => clearTimeout(checkHoldTimer))
-);
-
-/** Called by state.js's onSuccess hook after every successful "=" */
 export function onCalculationSuccess() {
-  checkKey.disabled = false;
-  hideCheckPanel();
-}
-
-/** Any other key (AC, digits, operators...) dismisses an in-progress check
- *  overlay immediately — it should never require finishing the sequence
- *  just to get back to the calculator. */
-export function dismissCheckOverlay() {
-  if (checkActive) hideCheckPanel();
+  dismissCheckOverlay();
 }

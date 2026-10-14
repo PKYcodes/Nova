@@ -18,6 +18,8 @@ import "./ageCalculator.js";
 import "./gstCalculator.js";
 import "./emiCalculator.js";
 import "./cashCalculator.js";
+import "./discountCalculator.js";
+import "./splitCalculator.js";
 import "./updater.js";
 import "./splash.js";
 import "./onboarding.js";
@@ -67,7 +69,7 @@ window.__novaHandleBack = () => {
     menu.hidden = true;
     return true;
   }
-  for (const id of ["drawer", "convDrawer", "ageDrawer", "shareDrawer", "gstDrawer", "emiDrawer", "cashDrawer"]) {
+  for (const id of ["drawer", "convDrawer", "ageDrawer", "shareDrawer", "gstDrawer", "emiDrawer", "cashDrawer", "discDrawer", "splitDrawer"]) {
     const el = document.getElementById(id);
     if (el && el.classList.contains("open")) {
       el.classList.remove("open");

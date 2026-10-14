@@ -1,7 +1,9 @@
-// ---------- Speech (Instant text-to-speech, Hindi & English) ----------
+// ---------- Speech (100% Reliable text-to-speech, Hindi & English) ----------
 import { voiceMenuItem, voiceMenuLabel } from "./dom.js";
 import { VOICE_LANG_KEY, safeSetItem } from "./storage.js";
 import { showToast } from "./toast.js";
+import { numberToWordsFull } from "./core/numberWords.js";
+import { state } from "./state.js";
 
 export let voiceLang = localStorage.getItem(VOICE_LANG_KEY) || "hi";
 
@@ -15,12 +17,14 @@ if (voiceMenuItem) {
     voiceLang = voiceLang === "hi" ? "en" : "hi";
     safeSetItem(VOICE_LANG_KEY, voiceLang);
     applyVoiceLabel();
+    const previewMsg = voiceLang === "hi" ? "आवाज़ हिंदी सेट हो गई" : "Voice set to English";
+    const fallbackMsg = "Voice set to " + (voiceLang === "hi" ? "Hindi" : "English");
     showToast(voiceLang === "hi" ? "आवाज़: हिंदी" : "Voice: English");
-    if (navigator.vibrate) { try { navigator.vibrate(6); } catch (e) {} }
+    speakNumber(previewMsg, true, fallbackMsg);
+    if (window.vibrate) window.vibrate(6);
   });
 }
 
-// Eagerly pre-load and cache speech voices immediately
 let cachedVoices = [];
 function loadVoices() {
   if (window.speechSynthesis) {
@@ -32,52 +36,78 @@ if (window.speechSynthesis) {
   window.speechSynthesis.onvoiceschanged = loadVoices;
 }
 
-// Warm up speech synthesis immediately on first interaction
-let speechPrimed = false;
 export function primeSpeech() {
-  if (speechPrimed || !window.speechSynthesis) return;
-  speechPrimed = true;
+  if (!window.speechSynthesis) return;
   try {
-    const warm = new SpeechSynthesisUtterance("");
-    warm.volume = 0;
-    warm.rate = 2.0;
-    window.speechSynthesis.speak(warm);
+    if (window.speechSynthesis.paused) window.speechSynthesis.resume();
   } catch (e) {}
 }
 
 function pickVoiceFor(langPrefix) {
   if (!cachedVoices.length) loadVoices();
-  // 1. Prefer local/offline voices first (they speak in <20ms without network roundtrip)
   const localMatch = cachedVoices.find(
     (v) => v.lang && v.lang.toLowerCase().startsWith(langPrefix) && v.localService === true
   );
   if (localMatch) return localMatch;
-
-  // 2. Fallback to any matching voice
   return cachedVoices.find((v) => v.lang && v.lang.toLowerCase().startsWith(langPrefix)) || null;
 }
 
-export function speakNumber(text, soundOn = true) {
+/**
+ * Speaks text in the active language with automatic Latin/English fallback
+ * so devices without Hindi Devanagari TTS voices still speak aloud clearly.
+ */
+export function speakNumber(text, soundOn = true, customLatinFallback = "") {
   if (!soundOn || !text) return;
 
-  // 1. Native Android APK Bridge: zero latency, pre-warmed native TTS
-  if (window.AndroidBridge && typeof window.AndroidBridge.speak === "function") {
+  let latinFallback = customLatinFallback;
+  if (!latinFallback) {
+    // Check if text contains Devanagari characters
+    if (/[\u0900-\u097F]/.test(text)) {
+      if (state.current && state.current !== "Error") {
+        latinFallback = numberToWordsFull(state.current, "en");
+      } else {
+        latinFallback = text;
+      }
+    } else {
+      latinFallback = text;
+    }
+  }
+
+  // 1. Native Android APK Bridge (uses STREAM_MUSIC + automatic fallback if hi-IN missing)
+  if (window.AndroidBridge) {
     try {
-      window.AndroidBridge.speak(text, voiceLang);
-      return;
+      if (typeof window.AndroidBridge.speakWithFallback === "function") {
+        window.AndroidBridge.speakWithFallback(text, latinFallback, voiceLang);
+        return;
+      } else if (typeof window.AndroidBridge.speak === "function") {
+        window.AndroidBridge.speak(text, voiceLang);
+        return;
+      }
     } catch (e) {}
   }
 
-  // 2. Web Speech API fallback: instant execution
+  // 2. Web Speech API fallback
   if (!window.speechSynthesis) return;
   try {
+    if (window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+    }
     window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    const langCode = voiceLang === "hi" ? "hi-IN" : "en-IN";
-    const voice = pickVoiceFor(voiceLang === "hi" ? "hi" : "en");
+
+    let voice = pickVoiceFor(voiceLang);
+    let langToUse = voiceLang === "hi" ? "hi-IN" : "en-IN";
+    let textToUse = text;
+
+    if (voiceLang === "hi" && !voice) {
+      voice = pickVoiceFor("en");
+      langToUse = "en-IN";
+      textToUse = latinFallback;
+    }
+
+    const utter = new SpeechSynthesisUtterance(textToUse);
     if (voice) utter.voice = voice;
-    utter.lang = langCode;
-    utter.rate = 1.05; // snappy natural rate
+    utter.lang = langToUse;
+    utter.rate = 1.0;
     utter.pitch = 1.0;
     window.speechSynthesis.resume();
     window.speechSynthesis.speak(utter);

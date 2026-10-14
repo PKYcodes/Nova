@@ -32,6 +32,11 @@ class NovaNativeBridge(
     }
 
     @JavascriptInterface
+    fun speakWithFallback(primaryText: String, fallbackLatinText: String, lang: String) {
+        speechHelper.speakWithFallback(primaryText, fallbackLatinText, lang)
+    }
+
+    @JavascriptInterface
     fun copyToClipboard(text: String) {
         mainHandler.post {
             try {
@@ -96,5 +101,5 @@ class NovaNativeBridge(
     }
 
     @JavascriptInterface
-    fun getAppVersion(): String = "1.0.0"
+    fun getAppVersion(): String = "2.0.0"
 }

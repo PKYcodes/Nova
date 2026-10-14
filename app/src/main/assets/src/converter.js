@@ -10,7 +10,9 @@ const drawerControls = makeDrawerControls(convDrawer, convBackdrop, convHandle);
 
 const CONV_UNITS = {
   length: { units: { km: 1000, m: 1, cm: 0.01, mile: 1609.344, foot: 0.3048, inch: 0.0254 } },
-  weight: { units: { kg: 1, g: 0.001, lb: 0.453592, oz: 0.0283495 } },
+  weight: { units: { kg: 1, g: 0.001, quintal: 100, ton: 1000, lb: 0.453592, oz: 0.0283495 } },
+  area: { units: { "sq.ft": 0.092903, "sq.m": 1, "gaj (sq.yd)": 0.836127, acre: 4046.856, hectare: 10000, bigha: 2508.38 } },
+  data: { units: { MB: 1, GB: 1024, TB: 1048576, KB: 0.0009765625 } },
 };
 
 const CURRENCY_LIST = ["USD", "INR", "EUR", "GBP", "AED", "JPY", "CAD", "AUD", "CNY", "SGD", "SAR", "QAR", "KWD"];

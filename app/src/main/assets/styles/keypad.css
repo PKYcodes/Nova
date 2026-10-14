@@ -96,7 +96,7 @@
   color: var(--violet);
   border-color: rgba(var(--violet-rgb),0.35);
 }
-.key-check:disabled { opacity: 0.35; }
+.key-check:disabled { opacity: 0.48; border-color: rgba(var(--violet-rgb),0.22); }
 .key-check:disabled:active { transform: none; }
 .key-eq {
   background: linear-gradient(160deg, var(--green), rgba(var(--green-rgb),0.55));

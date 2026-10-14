@@ -1,9 +1,10 @@
-// ---------- In-App GitHub Releases Auto-Update Engine ----------
+// ---------- In-App GitHub Releases Auto-Update Engine (v2.0.0) ----------
 import { showToast } from "./toast.js";
 import { vibrate } from "./audio.js";
 
-export const CURRENT_VERSION = "1.0.0";
-export const GITHUB_REPO = "rv-group/nova-calculator"; // default repository path
+export const CURRENT_VERSION = "2.0.0";
+const REPO_STORAGE_KEY = "nova_github_repo_slug";
+export let githubRepo = localStorage.getItem(REPO_STORAGE_KEY) || "PKYcodes/nova-calculator";
 const LAST_UPDATE_CHECK_KEY = "nova_last_update_check";
 
 const updateModal = document.getElementById("updateModal");
@@ -11,13 +12,14 @@ const updateModalCloseBtn = document.getElementById("updateModalCloseBtn");
 const updateModalInstallBtn = document.getElementById("updateModalInstallBtn");
 const updateNewVersionBadge = document.getElementById("updateNewVersionBadge");
 const updateReleaseNotes = document.getElementById("updateReleaseNotes");
+const updateModalTitle = document.getElementById("updateModalTitle");
+const updateModalSub = document.getElementById("updateModalSub");
 const checkUpdateMenuBtn = document.getElementById("checkUpdateMenuBtn");
 const updateMenuStatus = document.getElementById("updateMenuStatus");
 const updateAvailableBadge = document.getElementById("updateAvailableBadge");
 
 let latestReleaseData = null;
 
-// Clean SemVer comparator: returns true if vNew > vCurrent
 function isNewerVersion(vNew, vCurrent) {
   const clean = (s) => (s || "").replace(/[^0-9.]/g, "").split(".").map((n) => parseInt(n, 10) || 0);
   const a = clean(vNew);
@@ -33,16 +35,17 @@ function isNewerVersion(vNew, vCurrent) {
 
 export async function checkForAppUpdates(interactive = false) {
   if (updateMenuStatus) updateMenuStatus.textContent = "Checking...";
+  if (interactive) vibrate(6);
 
   try {
-    const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/releases/latest`, {
+    const res = await fetch(`https://api.github.com/repos/${githubRepo}/releases/latest`, {
       headers: { Accept: "application/vnd.github.v3+json" }
     });
 
     if (!res.ok) {
+      if (updateMenuStatus) updateMenuStatus.textContent = `v${CURRENT_VERSION} (Latest)`;
       if (interactive) {
-        showToast("✓ Aapka app latest version (v" + CURRENT_VERSION + ") par hai");
-        if (updateMenuStatus) updateMenuStatus.textContent = "Up to date (v" + CURRENT_VERSION + ")";
+        showUpToDateModal();
       }
       return;
     }
@@ -52,54 +55,65 @@ export async function checkForAppUpdates(interactive = false) {
 
     if (isNewerVersion(latestTag, CURRENT_VERSION)) {
       latestReleaseData = release;
-      // Show badge in menu
       if (updateAvailableBadge) updateAvailableBadge.hidden = false;
-      if (updateMenuStatus) updateMenuStatus.textContent = `🚀 Update v${latestTag.replace('v','')} Available!`;
-
-      // Trigger In-App Update Modal
-      showUpdateModal(release);
+      if (updateMenuStatus) updateMenuStatus.textContent = `🚀 Update ${latestTag}`;
+      showUpdateModal(release, true);
       vibrate([15, 30, 15]);
     } else {
+      latestReleaseData = release;
       if (updateAvailableBadge) updateAvailableBadge.hidden = true;
-      if (updateMenuStatus) updateMenuStatus.textContent = `✓ Latest version (v${CURRENT_VERSION})`;
+      if (updateMenuStatus) updateMenuStatus.textContent = `v${CURRENT_VERSION} (Latest)`;
       if (interactive) {
-        showToast("✓ Aapka app latest version (v" + CURRENT_VERSION + ") par hai");
+        showUpToDateModal(release);
       }
     }
   } catch (e) {
+    if (updateMenuStatus) updateMenuStatus.textContent = `v${CURRENT_VERSION} (Latest)`;
     if (interactive) {
-      showToast("✓ App version v" + CURRENT_VERSION + " active hai");
-      if (updateMenuStatus) updateMenuStatus.textContent = `Up to date (v${CURRENT_VERSION})`;
+      showUpToDateModal();
     }
   }
 }
 
-function showUpdateModal(release) {
+function showUpdateModal(release, hasNewUpdate = true) {
   if (!updateModal) return;
-  const tag = release.tag_name || "v1.1.0";
+  const tag = release?.tag_name || `v${CURRENT_VERSION}`;
+  if (updateModalTitle) {
+    updateModalTitle.textContent = hasNewUpdate ? "🚀 New Update Available!" : "✓ App is Up to Date";
+  }
+  if (updateModalSub) {
+    updateModalSub.textContent = hasNewUpdate
+      ? "Naya version download aur install karne ke liye tayyar hai"
+      : `Aap Nova Calculator ke latest version (v${CURRENT_VERSION}) par hain`;
+  }
   if (updateNewVersionBadge) updateNewVersionBadge.textContent = tag;
   if (updateReleaseNotes) {
-    updateReleaseNotes.textContent = release.body || "New features, performance enhancements, and bug fixes.";
+    updateReleaseNotes.textContent = release?.body ||
+      "v2.0.0: Added Discount & Margin Calculator, Bill Splitter, 12-Key Scientific Mode, Area & Data Converter, ₹5/₹2/₹1 Cash Tally, and 100% Media-Stream Voice Engine.";
+  }
+  if (updateModalInstallBtn) {
+    updateModalInstallBtn.textContent = hasNewUpdate ? "Update Now ⬇" : "View GitHub Releases ↗";
   }
   updateModal.hidden = false;
+}
+
+function showUpToDateModal(release = null) {
+  showUpdateModal(release, false);
 }
 
 export function hideUpdateModal() {
   if (updateModal) updateModal.hidden = true;
 }
 
-// When user taps "Update Now"
 if (updateModalInstallBtn) {
   updateModalInstallBtn.addEventListener("click", () => {
     hideUpdateModal();
-    // Find direct APK download asset if present
     const apkAsset = latestReleaseData?.assets?.find((a) => a.name && a.name.endsWith(".apk"));
-    const downloadUrl = apkAsset?.browser_download_url || latestReleaseData?.html_url || `https://github.com/${GITHUB_REPO}/releases/latest`;
+    const downloadUrl = apkAsset?.browser_download_url || latestReleaseData?.html_url || `https://github.com/${githubRepo}/releases/latest`;
 
-    showToast("Opening update download...");
+    showToast("Opening GitHub Release...");
     vibrate(10);
 
-    // If running inside Android native bridge
     if (window.AndroidBridge && typeof window.AndroidBridge.openExternalUrl === "function") {
       window.AndroidBridge.openExternalUrl(downloadUrl);
     } else {
@@ -117,11 +131,10 @@ if (checkUpdateMenuBtn) {
   });
 }
 
-// Check for updates on startup (debounced once every 4 hours)
 const lastCheck = parseInt(localStorage.getItem(LAST_UPDATE_CHECK_KEY) || "0", 10);
 if (Date.now() - lastCheck > 4 * 3600 * 1000) {
   setTimeout(() => {
     checkForAppUpdates(false);
     localStorage.setItem(LAST_UPDATE_CHECK_KEY, Date.now().toString());
-  }, 3500); // Check 3.5s after app opens so opening animation stays buttery smooth
+  }, 3500);
 }

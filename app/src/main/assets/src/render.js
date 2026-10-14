@@ -149,7 +149,13 @@ export function render(animate = true) {
   if (state.current === "Error") {
     resultLine.textContent = "Error";
   } else if (state.editingTokenIndex === null && !state.justEvaluated) {
-    resultLine.innerHTML = renderCaretHTML(state.current, state.caretPos);
+    if (state.caretPos !== null && state.current !== "0") {
+      resultLine.classList.add("active-caret");
+      resultLine.innerHTML = renderCaretHTML(state.current, state.caretPos);
+    } else {
+      resultLine.classList.remove("active-caret");
+      resultLine.textContent = fmt(state.current);
+    }
   } else {
     resultLine.textContent = fmt(state.current);
   }

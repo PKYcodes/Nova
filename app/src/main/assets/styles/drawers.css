@@ -17,9 +17,10 @@
   left: 0; right: 0; bottom: 0;
   max-width: 400px;
   margin: 0 auto;
-  background: linear-gradient(180deg, rgba(16,18,30,0.97), rgba(8,9,16,0.99));
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
+  background: linear-gradient(180deg, #101324, #080a14);
+  transform: translateY(100%) translateZ(0);
+  will-change: transform;
+  contain: layout style;
   border: 1px solid var(--glass-border);
   border-bottom: none;
   color: var(--text);
@@ -201,9 +202,10 @@
 .conv-drawer { max-height: 60vh; }
 .conv-body { padding: 6px 20px 26px; }
 .conv-tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 14px;
 }
 .conv-tab {
   flex: 1;
@@ -268,7 +270,14 @@
 }
 .conv-swap:active { transform: scale(0.9); }
 
-.tape-scroll { overflow-y: auto; padding: 10px 16px 24px; }
+.tape-scroll {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  contain: content;
+  will-change: scroll-position;
+  padding: 10px 16px 36px;
+}
 
 .drawer-search {
   display: flex;
@@ -827,4 +836,18 @@
   background: var(--red);
   border-radius: 50%;
   box-shadow: 0 0 6px var(--red);
+}
+
+/* Keyboard inset and mobile view height fix */
+.drawer {
+  max-height: 82vh;
+  overscroll-behavior: contain;
+}
+.tool-drawer-body, .conv-body, .tape-scroll, .share-body {
+  padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 60px);
+  scroll-padding-bottom: 120px;
+}
+@media (max-height: 640px) {
+  .drawer { max-height: 92vh; }
+  .tool-drawer-body { max-height: 72vh; }
 }

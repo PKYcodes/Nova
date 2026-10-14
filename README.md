@@ -26,7 +26,7 @@ Aap bina Android Studio install kiye seedha **GitHub** par repository banakar ap
      ```
 3. **GitHub Releases Se APK Download Karein**
    - Jaise hi code `main` branch par push hoga, **GitHub Actions** apne aap chalu ho jayega (~2–3 minute mein build complete hoga).
-   - Build complete hote hi aapke GitHub repo ke **Releases** section (`v1.0.0`) mein **`Nova-Calculator-v1.0.0-RV-Group.apk`** aa jayega — wahan se seedha download karke kisi bhi Android phone mein install karein!
+   - Build complete hote hi aapke GitHub repo ke **Releases** section (`v2.0.0`) mein **`Nova-Calculator-v2.0.0-RV-Group.apk`** aa jayega — wahan se seedha download karke kisi bhi Android phone mein install karein!
 
 ---
 

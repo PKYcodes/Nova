@@ -51,7 +51,7 @@ jobs:
         run: |
           gradle assembleRelease assembleDebug --stacktrace
           mkdir -p release-output
-          cp app/build/outputs/apk/release/app-release.apk release-output/Nova-Calculator-v1.0.0-RV-Group.apk
+          cp app/build/outputs/apk/release/app-release.apk release-output/Nova-Calculator-v2.0.0-RV-Group.apk
           cp app/build/outputs/apk/debug/app-debug.apk release-output/Nova-Calculator-Debug.apk
 
       - name: Upload APK to GitHub Actions Artifacts
@@ -63,15 +63,15 @@ jobs:
       - name: Publish Signed APK to GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0.0
-          name: "Nova Calculator v1.0.0 — RV Group LTD | ♥️ BY PANKAJ"
+          tag_name: v2.0.0
+          name: "Nova Calculator v2.0.0 — RV Group LTD | ♥️ BY PANKAJ"
           body: |
             ### ✦ Nova Calculator (Android APK Release)
             **— powered by RV GROUP —**  
             **RV Group LTD | ♥️ BY PANKAJ**
 
             #### 📥 Direct APK Download
-            Neeche **Assets** section mein **`Nova-Calculator-v1.0.0-RV-Group.apk`** par tap karke download aur install karein.
+            Neeche **Assets** section mein **`Nova-Calculator-v2.0.0-RV-Group.apk`** par tap karke download aur install karein.
 
             > ⚠️ **Note**: Agar aapke phone mein purana test version pehle se installed tha, to pehle use phone se **Uninstall (Delete)** karein, fir ye naya build install karein. Is build mein permanent release keystore embed kar diya gaya hai, iske baad aage ke **saare future updates bina uninstall kiye direct update** hote rahenge!
 
@@ -81,7 +81,7 @@ jobs:
             - **Direct Social Sharing**: 1-tap WhatsApp, Telegram, X, Facebook, and SMS calculation card share.
             - **In-App Auto-Updater**: Direct in-app update notifications and 1-tap APK update download.
           files: |
-            release-output/Nova-Calculator-v1.0.0-RV-Group.apk
+            release-output/Nova-Calculator-v2.0.0-RV-Group.apk
             release-output/Nova-Calculator-Debug.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

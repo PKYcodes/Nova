@@ -83,6 +83,14 @@
           <svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 4h16v16H4z" stroke="currentColor" stroke-width="1.8" fill="none" rx="2"/><path d="M9 8h6M9 12h4M9 16h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
           <span>GST / Tax Calculator</span>
         </button>
+        <button class="menu-item" id="discMenuItem">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" stroke="currentColor" stroke-width="1.8" fill="none"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/></svg>
+          <span>Discount & Margin Calc</span>
+        </button>
+        <button class="menu-item" id="splitMenuItem">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.8" fill="none"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>
+          <span>Bill Split & Tip Calc</span>
+        </button>
         <button class="menu-item" id="emiMenuItem">
           <svg viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
           <span>Loan & EMI Calculator</span>
@@ -132,7 +140,7 @@
         <div class="menu-version-card">
           <div class="menu-version-row">
             <span class="menu-version-name">Nova Calculator</span>
-            <span class="menu-version-pill" id="updateMenuStatus">v1.0.0</span>
+            <span class="menu-version-pill" id="updateMenuStatus">v2.0.0</span>
           </div>
           <button class="check-update-btn" id="checkUpdateMenuBtn" type="button">
             <svg viewBox="0 0 24 24" width="13" height="13"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
@@ -177,6 +185,11 @@
           <button class="key key-sci" data-pos="mminus" data-action="mminus">M−</button>
           <button class="key key-sci" data-pos="sqrt" data-action="sqrt">√</button>
           <button class="key key-sci" data-pos="square" data-action="square">x²</button>
+          <button class="key key-sci" data-pos="cube" data-action="cube">x³</button>
+          <button class="key key-sci" data-pos="inv" data-action="inv">1/x</button>
+          <button class="key key-sci" data-pos="sin" data-action="sin">sin</button>
+          <button class="key key-sci" data-pos="cos" data-action="cos">cos</button>
+          <button class="key key-sci" data-pos="tan" data-action="tan">tan</button>
           <button class="key key-sci" data-pos="pi" data-action="pi">π</button>
         </div>
       </div>
@@ -193,7 +206,9 @@
       </button>
 
       <button class="key key-danger" data-pos="ac" data-action="clear" id="clearKey">AC</button>
-      <button class="key key-fn" data-pos="bs" data-action="backspace">⌫</button>
+      <button class="key key-fn" data-pos="bs" data-action="backspace" aria-label="Backspace">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 9l-6 6M12 9l6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
       <button class="key key-fn" data-pos="pc" data-action="percent">%</button>
 
       <button class="key key-op" data-pos="mul" data-action="op" data-op="×">×</button>
@@ -265,7 +280,9 @@
     <div class="conv-tabs" id="convTabs">
       <button class="conv-tab active" data-cat="length">Length</button>
       <button class="conv-tab" data-cat="weight">Weight</button>
+      <button class="conv-tab" data-cat="area">Area</button>
       <button class="conv-tab" data-cat="temp">Temp</button>
+      <button class="conv-tab" data-cat="data">Data</button>
       <button class="conv-tab" data-cat="currency">Currency</button>
     </div>
     <div class="conv-row">
@@ -508,15 +525,151 @@
         <input type="number" inputmode="numeric" class="cash-input" id="noteCount_10" placeholder="0" />
         <span class="cash-subtotal" id="subtotal_10">₹ 0</span>
       </div>
+      <div class="cash-row">
+        <span class="cash-denom">₹ 5</span>
+        <span class="cash-mul">×</span>
+        <input type="number" inputmode="numeric" class="cash-input" id="noteCount_5" placeholder="0" />
+        <span class="cash-subtotal" id="subtotal_5">₹ 0</span>
+      </div>
+      <div class="cash-row">
+        <span class="cash-denom">₹ 2</span>
+        <span class="cash-mul">×</span>
+        <input type="number" inputmode="numeric" class="cash-input" id="noteCount_2" placeholder="0" />
+        <span class="cash-subtotal" id="subtotal_2">₹ 0</span>
+      </div>
+      <div class="cash-row">
+        <span class="cash-denom">₹ 1</span>
+        <span class="cash-mul">×</span>
+        <input type="number" inputmode="numeric" class="cash-input" id="noteCount_1" placeholder="0" />
+        <span class="cash-subtotal" id="subtotal_1">₹ 0</span>
+      </div>
     </div>
 
     <div class="cash-summary-card">
       <div class="cash-sum-header">
         <span id="cashTotalNotes">0 notes</span>
-        <button class="tool-mini-btn" id="cashShareBtn" type="button">Share WhatsApp</button>
+        <div style="display:flex;gap:6px;"><button class="tool-mini-btn" id="cashSpeakBtn" type="button">🔊 Speak</button><button class="tool-mini-btn" id="cashShareBtn" type="button">Share WhatsApp</button></div>
       </div>
       <div class="cash-grand-total" id="cashTotalAmount">₹ 0</div>
       <div class="cash-in-words" id="cashInWords">शून्य रुपये</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Discount & Margin Calculator Drawer -->
+<div class="drawer-backdrop" id="discBackdrop"></div>
+<section class="drawer conv-drawer" id="discDrawer" aria-label="Discount Calculator">
+  <div class="drawer-handle" id="discHandle"></div>
+  <div class="drawer-header">
+    <h2><span class="drawer-dot"></span> Discount & Margin</h2>
+    <button class="clear-history" id="discCloseBtn">close</button>
+  </div>
+  <div class="tool-drawer-body">
+    <div class="tool-input-group">
+      <div class="tool-label-row">
+        <label class="tool-label">MRP / Original Price (₹)</label>
+        <button class="tool-mini-btn" id="discLoadCalcBtn" type="button">Use Result</button>
+      </div>
+      <input type="number" inputmode="decimal" class="tool-text-input" id="discPriceInput" placeholder="Enter MRP..." value="1000" />
+    </div>
+
+    <div class="gst-slabs-grid">
+      <button class="gst-rate-btn disc-preset-btn" data-disc="5" type="button">5%</button>
+      <button class="gst-rate-btn disc-preset-btn active" data-disc="10" type="button">10%</button>
+      <button class="gst-rate-btn disc-preset-btn" data-disc="15" type="button">15%</button>
+      <button class="gst-rate-btn disc-preset-btn" data-disc="20" type="button">20%</button>
+      <button class="gst-rate-btn disc-preset-btn" data-disc="25" type="button">25%</button>
+      <button class="gst-rate-btn disc-preset-btn" data-disc="50" type="button">50%</button>
+    </div>
+
+    <div class="conv-row" style="gap:10px;">
+      <div class="tool-input-group" style="flex:1;">
+        <label class="tool-label">Discount (%)</label>
+        <input type="number" inputmode="decimal" class="tool-text-input" id="discPercentInput" value="10" />
+      </div>
+      <div class="tool-input-group" style="flex:1;">
+        <label class="tool-label">Extra 2nd Disc (%)</label>
+        <input type="number" inputmode="decimal" class="tool-text-input" id="discExtraInput" value="0" />
+      </div>
+    </div>
+
+    <div class="tool-result-card">
+      <div class="tool-res-row total-row">
+        <span>Final Price:</span>
+        <strong class="highlight-cyan" id="discFinalDisplay">₹ 900.00</strong>
+      </div>
+      <div class="tool-res-row">
+        <span>You Save:</span>
+        <strong class="highlight-orange" id="discSavedDisplay">₹ 100.00</strong>
+      </div>
+      <div class="tool-res-row">
+        <span>Effective Discount:</span>
+        <strong id="discEffDisplay">10.0% OFF</strong>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:6px;">
+        <button class="tool-mini-btn" id="discSpeakBtn" type="button" style="flex:1;padding:7px 0;">🔊 Speak Price</button>
+        <button class="tool-mini-btn" id="discUseFinalBtn" type="button" style="flex:1;padding:7px 0;">Load in Calculator</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Bill Split & Tip Calculator Drawer -->
+<div class="drawer-backdrop" id="splitBackdrop"></div>
+<section class="drawer conv-drawer" id="splitDrawer" aria-label="Bill Split Calculator">
+  <div class="drawer-handle" id="splitHandle"></div>
+  <div class="drawer-header">
+    <h2><span class="drawer-dot"></span> Bill Split & Tip</h2>
+    <button class="clear-history" id="splitCloseBtn">close</button>
+  </div>
+  <div class="tool-drawer-body">
+    <div class="tool-input-group">
+      <div class="tool-label-row">
+        <label class="tool-label">Total Bill Amount (₹)</label>
+        <button class="tool-mini-btn" id="splitLoadCalcBtn" type="button">Use Result</button>
+      </div>
+      <input type="number" inputmode="decimal" class="tool-text-input" id="splitBillInput" placeholder="Enter bill..." value="1200" />
+    </div>
+
+    <div class="tool-input-group">
+      <label class="tool-label">Add Tip (%)</label>
+      <div class="tool-toggle-row">
+        <button class="tool-toggle-btn split-tip-btn active" data-tip="0" type="button">No Tip</button>
+        <button class="tool-toggle-btn split-tip-btn" data-tip="5" type="button">+5%</button>
+        <button class="tool-toggle-btn split-tip-btn" data-tip="10" type="button">+10%</button>
+        <button class="tool-toggle-btn split-tip-btn" data-tip="15" type="button">+15%</button>
+      </div>
+    </div>
+
+    <div class="tool-input-group">
+      <div class="tool-label-row">
+        <label class="tool-label">Split Among People</label>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button class="tool-mini-btn" id="splitPeopleMinus" type="button" style="width:28px;height:28px;font-size:16px;">−</button>
+          <strong id="splitPeopleCount" style="font-family:var(--font-display);font-size:16px;color:var(--cyan);">4</strong>
+          <button class="tool-mini-btn" id="splitPeoplePlus" type="button" style="width:28px;height:28px;font-size:16px;">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tool-result-card">
+      <div class="tool-res-row total-row">
+        <span>Per Person Share:</span>
+        <strong class="highlight-cyan" id="splitPerPersonDisplay">₹ 300.00</strong>
+      </div>
+      <div class="tool-res-row">
+        <span>Total Tip Amount:</span>
+        <strong id="splitTipAmountDisplay">₹ 0.00</strong>
+      </div>
+      <div class="tool-res-row">
+        <span>Total Bill with Tip:</span>
+        <strong class="highlight-orange" id="splitTotalBillDisplay">₹ 1,200.00</strong>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:6px;">
+        <button class="tool-mini-btn" id="splitSpeakBtn" type="button" style="flex:1;padding:7px 0;">🔊 Speak Share</button>
+        <button class="tool-mini-btn" id="splitShareBtn" type="button" style="flex:1;padding:7px 0;">Share WhatsApp</button>
+      </div>
     </div>
   </div>
 </section>
@@ -527,14 +680,14 @@
     <div class="update-card-header">
       <div class="update-sparkle">🚀</div>
       <div class="update-header-text">
-        <h3>New Update Available!</h3>
-        <p>A new version of Nova Calculator is ready</p>
+        <h3 id="updateModalTitle">New Update Available!</h3>
+        <p id="updateModalSub">A new version of Nova Calculator is ready</p>
       </div>
     </div>
     <div class="update-version-row">
-      <span>Current: <b>v1.0.0</b></span>
+      <span>Current: <b>v2.0.0</b></span>
       <span class="update-arrow">→</span>
-      <span class="update-badge" id="updateNewVersionBadge">v1.1.0</span>
+      <span class="update-badge" id="updateNewVersionBadge">v2.0.0</span>
     </div>
     <div class="update-notes-box">
       <strong>What's New:</strong>
