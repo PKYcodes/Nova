@@ -4,7 +4,7 @@
   background: linear-gradient(160deg, rgba(10,14,24,0.9), rgba(6,8,16,0.95));
   border: 2px solid rgba(var(--cyan-rgb),0.25);
   border-radius: 18px;
-  padding: 26px 18px 18px;
+  padding: 32px 16px 14px;
   margin-bottom: 12px;
   box-shadow:
     inset 0 2px 10px rgba(0,0,0,0.5),
@@ -105,11 +105,15 @@
   font-weight: 500;
   color: var(--text-dim);
   min-height: 22px;
+  max-height: 44px;
+  line-height: 1.35;
   margin-bottom: 6px;
-  letter-spacing: 0.03em;
-  overflow-x: auto;
+  letter-spacing: 0.02em;
+  white-space: normal;
+  word-break: break-all;
+  overflow-y: auto;
+  text-align: right;
   scrollbar-width: none;
-  padding-right: 78px;
 }
 .lcd-expr::-webkit-scrollbar { display: none; }
 .lcd-expr.editable .expr-chip {
@@ -142,7 +146,6 @@
   text-shadow: 0 0 10px rgba(var(--cyan-rgb),0.55), 0 0 30px rgba(var(--cyan-rgb),0.25);
   overflow-x: auto;
   scrollbar-width: none;
-  padding-right: 78px;
   transition: font-size 100ms ease;
 }
 .lcd-result::-webkit-scrollbar { display: none; }

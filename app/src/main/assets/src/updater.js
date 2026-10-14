@@ -2,9 +2,8 @@
 import { showToast } from "./toast.js";
 import { vibrate } from "./audio.js";
 
-export const CURRENT_VERSION = "2.0.0";
-const REPO_STORAGE_KEY = "nova_github_repo_slug";
-export let githubRepo = localStorage.getItem(REPO_STORAGE_KEY) || "PKYcodes/nova-calculator";
+export const CURRENT_VERSION = "2.1.0";
+export const githubRepo = "Pkycodes/Nova";
 const LAST_UPDATE_CHECK_KEY = "nova_last_update_check";
 
 const updateModal = document.getElementById("updateModal");
@@ -38,11 +37,23 @@ export async function checkForAppUpdates(interactive = false) {
   if (interactive) vibrate(6);
 
   try {
-    const res = await fetch(`https://api.github.com/repos/${githubRepo}/releases/latest`, {
+    let res = await fetch(`https://api.github.com/repos/${githubRepo}/releases/latest`, {
       headers: { Accept: "application/vnd.github.v3+json" }
     });
+    let release = null;
+    if (res.ok) {
+      release = await res.json();
+    } else {
+      const listRes = await fetch(`https://api.github.com/repos/${githubRepo}/releases`, {
+        headers: { Accept: "application/vnd.github.v3+json" }
+      });
+      if (listRes.ok) {
+        const list = await listRes.json();
+        if (Array.isArray(list) && list.length > 0) release = list[0];
+      }
+    }
 
-    if (!res.ok) {
+    if (!release) {
       if (updateMenuStatus) updateMenuStatus.textContent = `v${CURRENT_VERSION} (Latest)`;
       if (interactive) {
         showUpToDateModal();
@@ -50,7 +61,6 @@ export async function checkForAppUpdates(interactive = false) {
       return;
     }
 
-    const release = await res.json();
     const latestTag = release.tag_name || release.name || "";
 
     if (isNewerVersion(latestTag, CURRENT_VERSION)) {
@@ -89,7 +99,7 @@ function showUpdateModal(release, hasNewUpdate = true) {
   if (updateNewVersionBadge) updateNewVersionBadge.textContent = tag;
   if (updateReleaseNotes) {
     updateReleaseNotes.textContent = release?.body ||
-      "v2.0.0: Added Discount & Margin Calculator, Bill Splitter, 12-Key Scientific Mode, Area & Data Converter, ₹5/₹2/₹1 Cash Tally, and 100% Media-Stream Voice Engine.";
+      "v2.1.0: Added Discount & Margin Calculator, Bill Splitter, 12-Key Scientific Mode, Area & Data Converter, ₹5/₹2/₹1 Cash Tally, and 100% Media-Stream Voice Engine.";
   }
   if (updateModalInstallBtn) {
     updateModalInstallBtn.textContent = hasNewUpdate ? "Update Now ⬇" : "View GitHub Releases ↗";

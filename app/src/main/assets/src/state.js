@@ -30,7 +30,8 @@ class CalculatorState {
     this.lastCalc = null;
 
     this.editingTokenIndex = null; // null = editing `current`; otherwise index into tokens[]
-    this.caretPos = null;          // null = caret sits at the end of the active field
+    this.caretPos = null;
+    this.customCaretActive = false;          // null = caret sits at the end of the active field
 
     this.memoryValue = parseFloat(localStorage.getItem(MEMORY_KEY) || "0") || 0;
   }
@@ -46,6 +47,7 @@ class CalculatorState {
   /** Returns true (and exits edit mode) if a token edit was in progress — the
    *  caller should treat that as "consumed" and not also perform its own action. */
   commitTokenEdit() {
+    this.customCaretActive = false;
     if (this.editingTokenIndex !== null) {
       this.editingTokenIndex = null;
       this.caretPos = null;
@@ -58,10 +60,12 @@ class CalculatorState {
   startEditingToken(idx, caretPos) {
     this.editingTokenIndex = idx;
     this.caretPos = caretPos;
+    this.customCaretActive = true;
   }
   setCaretOnCurrent(pos) {
     this.editingTokenIndex = null;
     this.caretPos = pos;
+    this.customCaretActive = true;
   }
   cycleOperatorAt(idx) {
     const cur = OPS.indexOf(this.tokens[idx]);
@@ -148,6 +152,7 @@ class CalculatorState {
     this.justEvaluated = false;
     this.frozenExpr = null;
     this.caretPos = null;
+    this.customCaretActive = false;
     sfxClear();
   }
 
@@ -191,6 +196,7 @@ class CalculatorState {
       this.awaitingNewNumber = true;
     }
     this.justEvaluated = false;
+    this.customCaretActive = false;
     sfxOperator();
   }
 
@@ -228,6 +234,7 @@ class CalculatorState {
     this.awaitingNewNumber = true;
     this.justEvaluated = true;
     this.caretPos = null;
+    this.customCaretActive = false;
     this.frozenExpr = `${exprText} =`;
     sfxEquals();
     hooks.onSuccess?.();
@@ -334,6 +341,7 @@ class CalculatorState {
     this.caretPos = val.length;
     this.awaitingNewNumber = false;
     this.justEvaluated = false;
+    this.customCaretActive = false;
     sfxOperator();
     return true;
   }
@@ -355,6 +363,7 @@ class CalculatorState {
     this.caretPos = null;
     this.awaitingNewNumber = false;
     this.justEvaluated = false;
+    this.customCaretActive = false;
     sfxOperator();
   }
   memoryAdd(sign) {

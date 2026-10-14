@@ -1,5 +1,6 @@
 /* ---------- Base: reset, CSS variables, themes, animated background ---------- */
 :root {
+  color-scheme: dark;
   --bg: #06070d;
   --glass: rgba(255,255,255,0.055);
   --glass-hi: rgba(255,255,255,0.09);

@@ -2,6 +2,7 @@ package com.rvgroup.novacalculator
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.ViewGroup
 import android.webkit.JsPromptResult
@@ -60,6 +61,9 @@ class MainActivity : AppCompatActivity() {
 
         webView = WebView(this).apply {
             setBackgroundColor(Color.parseColor("#06070D"))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                isForceDarkAllowed = false
+            }
             isVerticalScrollBarEnabled = false
             isHorizontalScrollBarEnabled = false
             overScrollMode = WebView.OVER_SCROLL_NEVER
@@ -171,10 +175,10 @@ class MainActivity : AppCompatActivity() {
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
         )
-                // Handle status bar and camera notch insets so UI is never cut off
+                // Handle status bar, camera notch, and bottom navigation bar insets
         ViewCompat.setOnApplyWindowInsetsListener(rootLayout) { view, insets ->
-            val statusBars = insets.getInsets(WindowInsetsCompat.Type.statusBars())
-            view.setPadding(0, statusBars.top, 0, 0)
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
         }
 

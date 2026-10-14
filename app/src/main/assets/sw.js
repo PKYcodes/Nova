@@ -1,4 +1,4 @@
-const CACHE_NAME = "nova-calc-v28";
+const CACHE_NAME = "nova-calc-v29";
 const APP_SHELL = [
   "./",
   "./index.html",

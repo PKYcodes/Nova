@@ -101,5 +101,5 @@ class NovaNativeBridge(
     }
 
     @JavascriptInterface
-    fun getAppVersion(): String = "2.0.0"
+    fun getAppVersion(): String = "2.1.0"
 }

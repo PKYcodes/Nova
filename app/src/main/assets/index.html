@@ -9,6 +9,7 @@
 <!-- PWA -->
 <link rel="manifest" href="manifest.json" />
 <meta name="theme-color" content="#06070d" />
+<meta name="color-scheme" content="dark" />
 <link rel="icon" href="icons/icon-192.png" />
 <link rel="apple-touch-icon" href="icons/icon-192.png" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -140,7 +141,7 @@
         <div class="menu-version-card">
           <div class="menu-version-row">
             <span class="menu-version-name">Nova Calculator</span>
-            <span class="menu-version-pill" id="updateMenuStatus">v2.0.0</span>
+            <span class="menu-version-pill" id="updateMenuStatus">v2.1.0</span>
           </div>
           <button class="check-update-btn" id="checkUpdateMenuBtn" type="button">
             <svg viewBox="0 0 24 24" width="13" height="13"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
@@ -234,8 +235,19 @@
   </main>
 
   <footer class="footer-brand">
-    <img src="icons/rv-powered-dark.png" alt="Powered by RV Group" class="footer-powered-logo" />
-    <p class="footer-copyright">RV Group LTD | ♥️ BY PANKAJ</p>
+    <svg class="footer-powered-svg" viewBox="0 0 520 88" role="img" aria-label="Powered by RV Group">
+      <line x1="12" y1="46" x2="72" y2="46" stroke="#c7d2fe" stroke-width="3" stroke-linecap="round"/>
+      <text x="86" y="53" fill="#eef2ff" font-family="sans-serif" font-size="25" font-weight="700" font-style="italic" letter-spacing="0.5">powered by</text>
+      <!-- Stylized R (White #FFFFFF) -->
+      <path d="M 248 14 H 316 C 334 14 344 23 344 37 C 344 49 335 57 319 58 L 344 82 H 318 L 296 58 H 268 V 82 H 248 V 46 H 312 C 319 46 323 42 323 37 C 323 31 319 28 312 28 H 271 L 288 42 H 266 L 248 26 Z" fill="#ffffff"/>
+      <!-- Orange V Slash (#FF7315) -->
+      <polygon points="338,72 396,14 420,14 352,82" fill="#ff7315"/>
+      <!-- Right Line -->
+      <line x1="414" y1="46" x2="496" y2="46" stroke="#c7d2fe" stroke-width="3" stroke-linecap="round"/>
+      <!-- GROUP text -->
+      <text x="378" y="81" fill="#ffffff" font-family="sans-serif" font-size="22" font-weight="800" letter-spacing="2.5">GROUP</text>
+    </svg>
+    <p class="footer-copyright">RV Group LTD <span class="footer-sep">|</span> <span class="footer-heart">♥️</span> BY PANKAJ</p>
   </footer>
 </div>
 
@@ -685,9 +697,9 @@
       </div>
     </div>
     <div class="update-version-row">
-      <span>Current: <b>v2.0.0</b></span>
+      <span>Current: <b>v2.1.0</b></span>
       <span class="update-arrow">→</span>
-      <span class="update-badge" id="updateNewVersionBadge">v2.0.0</span>
+      <span class="update-badge" id="updateNewVersionBadge">v2.1.0</span>
     </div>
     <div class="update-notes-box">
       <strong>What's New:</strong>
